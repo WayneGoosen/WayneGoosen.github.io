@@ -6,13 +6,13 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site title
-title: "BlogInn"
+title: "WOMM"
 
 # A description of your site for social meta tag, search engines, and feed.xml
-description: "BlogInn is a bold theme for the Jekyll blogging platform. Available for purchase at ThemeForest.net."
+description: "Developer blog hoping to share and gain knowledge."
 
 # Tagline near the site title
-tagline: "Thoughts, stories and ideas."
+tagline: "Works on my machine."
 
 # The subpath of your site, e.g. /blog, for generating urls
 baseurl:
@@ -21,7 +21,7 @@ sass:
   sass_dir: _sass
 
 # The base hostname & protocol of your site for where absolute urls are needed
-url: "http://justgoodthemes.com"
+url: "http://waynegoosen.github.io"
 
 # Site navigation - each item must have a title and a url.
 navigation:
@@ -38,18 +38,18 @@ navigation:
 disqus:
 
 # Author information - author info at the bottom of the post
-author_name: "John Doe"
-author_bio: "John is a designer, photographer, speaker, author of a couple of books about typography and the founder of photo magazine Curious."
-author_url:  "http://justgoodthemes.com"
-author_location: "Vilnius, Lithuania"
+author_name: "WOMM"
+author_bio: "A technical developer blog hoping to dive deep into the magic that keeps our systems running. "
+author_url:  "http://waynegoosen.github.io"
+author_location: "Durban, South Africa"
 author_image: /images/authorimage.png
 
 # Sidebar Add banner
-banner_url: "http://justgoodthemes.com"
-banner_image: images/banner.jpg
+#banner_url: "http://justgoodthemes.com"
+#banner_image: images/banner.jpg
 
 # Sidebar newsletter widget - add your form action url for MailChimp signup form here
-mailchimp_url: "//justgoodthemes.us3.list-manage.com/subscribe/post?u=78f1bab16028354caeb23aecd&amp;id=4a7330d117"
+#mailchimp_url: "//justgoodthemes.us3.list-manage.com/subscribe/post?u=78f1bab16028354caeb23aecd&amp;id=4a7330d117"
 
 # Social links in the site footer
 twitter_username: "username"

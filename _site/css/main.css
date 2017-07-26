@@ -2,6 +2,14 @@
 /**
  * Variables
  * ----------------------------------------------------------------------------
+ $alabaster: #fafafa;
+$gallery: #ededed;
+$gray: #818181;
+$mine-shaft: #333333;
+$picton-blue: #22b3eb;
+$silver: #c6c6c6;
+$tundora: #474747;
+$white: #ffffff;
  */
 /* Colors */
 /**
@@ -323,13 +331,13 @@ body {
   line-height: 1.66667; }
 
 a {
-  color: #22b3eb;
+  color: #cc333f;
   text-decoration: underline;
   -webkit-transition: color 0.3s;
   -moz-transition: color 0.3s;
   transition: color 0.3s; }
   a:hover {
-    color: #55c5f0; }
+    color: #d76069; }
 
 h1,
 h2,
@@ -411,7 +419,7 @@ pre:before {
   -moz-osx-font-smoothing: grayscale; }
 
 blockquote {
-  border-left: 3px solid #55c5f0;
+  border-left: 3px solid #d76069;
   color: #3d3d3d;
   font-size: 20px;
   font-style: italic;
@@ -514,7 +522,7 @@ button,
 input[type="submit"],
 input[type="button"],
 input[type="reset"] {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   border: 0;
   color: #ffffff;
   font-size: 12px;
@@ -535,7 +543,7 @@ button:active,
 input[type="button"]:active,
 input[type="reset"]:active,
 input[type="submit"]:active {
-  background-color: #55c5f0;
+  background-color: #d76069;
   outline: 0; }
 
 /* Placeholder text color */
@@ -757,7 +765,7 @@ green     #859900  operators, other keywords
 
 /* Keyword.Constant */
 .highlight .kd {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Keyword.Declaration */
 .highlight .kn {
@@ -769,7 +777,7 @@ green     #859900  operators, other keywords
 
 /* Keyword.Pseudo */
 .highlight .kr {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Keyword.Reserved */
 .highlight .kt {
@@ -797,7 +805,7 @@ green     #859900  operators, other keywords
 
 /* Name.Builtin */
 .highlight .nc {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Class */
 .highlight .no {
@@ -805,7 +813,7 @@ green     #859900  operators, other keywords
 
 /* Name.Constant */
 .highlight .nd {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Decorator */
 .highlight .ni {
@@ -817,7 +825,7 @@ green     #859900  operators, other keywords
 
 /* Name.Exception */
 .highlight .nf {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Function */
 .highlight .nl {
@@ -837,11 +845,11 @@ green     #859900  operators, other keywords
 
 /* Name.Property */
 .highlight .nt {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Tag */
 .highlight .nv {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Variable */
 .highlight .ow {
@@ -913,19 +921,19 @@ green     #859900  operators, other keywords
 
 /* Literal.String.Symbol */
 .highlight .bp {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Builtin.Pseudo */
 .highlight .vc {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Variable.Class */
 .highlight .vg {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Variable.Global */
 .highlight .vi {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Name.Variable.Instance */
 .highlight .il {
@@ -947,7 +955,7 @@ green     #859900  operators, other keywords
     color: #ffffff; }
 
 .fill-horizontal {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   -webkit-box-shadow: inset -50px 0 #474747;
   -moz-box-shadow: inset -50px 0 #474747;
   box-shadow: inset -50px 0 #474747;
@@ -1092,7 +1100,7 @@ green     #859900  operators, other keywords
 
 .nav-menu li:hover > a,
 .nav-menu .nav-current > a {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 #menu-toggle {
   display: none; }
@@ -1125,10 +1133,10 @@ green     #859900  operators, other keywords
   text-decoration: none; }
 
 .site-title a:hover {
-  color: #55c5f0; }
+  color: #d76069; }
 
 .site-title .logo-text {
-  border-left: 10px solid #22b3eb;
+  border-left: 10px solid #cc333f;
   padding-left: 20px; }
 
 .site-description {
@@ -1184,7 +1192,7 @@ green     #859900  operators, other keywords
   position: relative; }
 
 .post .featured-post {
-  background-color: #55c5f0;
+  background-color: #d76069;
   color: #ffffff;
   font-size: 14px;
   height: 30px;
@@ -1206,7 +1214,7 @@ green     #859900  operators, other keywords
   width: 100%; }
 
 .entry-title {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   clear: both;
   color: #ffffff;
   float: left;
@@ -1230,7 +1238,7 @@ green     #859900  operators, other keywords
   color: #ffffff; }
 
 .entry-meta {
-  background-color: #55c5f0;
+  background-color: #d76069;
   clear: both;
   color: #ffffff;
   font-size: 12px;
@@ -1249,7 +1257,7 @@ green     #859900  operators, other keywords
   margin-top: 40px; }
 
 .read-more .more-link {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   color: #ffffff;
   display: inline-block;
   font-size: 12px;
@@ -1264,7 +1272,7 @@ green     #859900  operators, other keywords
   transition: background-color 0.3s; }
 
 .read-more .more-link:hover {
-  background-color: #55c5f0; }
+  background-color: #d76069; }
 
 .entry-footer {
   font-size: 11px;
@@ -1304,7 +1312,7 @@ green     #859900  operators, other keywords
 
 .share-post a:hover,
 .tag-links a:hover {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   color: #ffffff; }
 
 /* Author box */
@@ -1357,7 +1365,7 @@ green     #859900  operators, other keywords
   color: #c6c6c6; }
 
 .author-website a:hover {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 /* Tags archive */
 .archive-tags-list {
@@ -1387,7 +1395,7 @@ a.archive-top-link {
 
 .archive-tags-list a:hover,
 a.archive-top-link:hover {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   color: #ffffff; }
 
 .archive-posts-list {
@@ -1458,7 +1466,7 @@ a.archive-top-link:hover {
 .post-navigation .nav-next,
 .post-navigation .nav-previous {
   background-color: #474747;
-  border-left: 3px solid #22b3eb;
+  border-left: 3px solid #cc333f;
   margin-bottom: 20px;
   padding-bottom: 50px;
   padding-top: 30px;
@@ -1485,7 +1493,7 @@ a.archive-top-link:hover {
   text-decoration: none; }
 
 .post-navigation .nav-title a:hover {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 .post-navigation .nav-before,
 .post-navigation .nav-date {
@@ -1595,7 +1603,7 @@ a.archive-top-link:hover {
   text-decoration: none; }
 
 .widget-recent-posts a:hover {
-  color: #22b3eb; }
+  color: #cc333f; }
 
 .widget-recent-posts span {
   color: #818181;
@@ -1620,7 +1628,7 @@ a.archive-top-link:hover {
   transition: all 0.3s; }
 
 .widget-tags a:hover {
-  background-color: #22b3eb;
+  background-color: #cc333f;
   color: #ffffff; }
 
 .widget-newsletter label {
@@ -1746,7 +1754,7 @@ a.archive-top-link:hover {
     -moz-osx-font-smoothing: grayscale; }
 
   #menu-toggle.toggled-on {
-    color: #55c5f0; }
+    color: #d76069; }
 
   #menu-toggle.toggled-on:before {
     content: "\f00d"; } }
