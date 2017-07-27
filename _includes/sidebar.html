@@ -5,6 +5,7 @@
         <h2 class="widget-title">About {{ site.author_name }}</h2>
         <p>{{ site.author_bio }}</p>
     </section><!-- .widget-text -->
+    
     {% endif %}
 
     {% if site.mailchimp_url %}
@@ -50,5 +51,10 @@
             {% endfor %}
         </div><!-- .tagcloud -->
     </section><!-- .widget -->
+
+     <section class="widget widget-text">
+        <h2 class="widget-title">Disclaimer</h2>
+        <p>This is my personal blog. The views expressed on these pages are mine alone and not those of my employer.</p>
+    </section><!-- .widget-text -->
 
 </aside><!-- .sidebar -->
