@@ -1,16 +1,14 @@
 ---
 layout: page
-title: About this blog
-description: An optional about page for BlogInn Jekyll theme
+title: About
+description: 
 #banner_image: aboutPage.jpg
 ---
 
-**John Doe** is a Senior Art Director from [Vilnius](https://en.wikipedia.org/wiki/Vilnius), Lithuania. After graduating from The College of Visual Arts with a degree in Communication Design, he worked for three small graphic design shops where he honed his design style and sensibility.
+Hi, I'm **Wayne**.
 
-His work has been recognized by Communication Arts, Print, How, ID, IdN, AIGA, Effie, Archive, Graphis, AdFed and Rockport. Graphic Design USA named him a person to watch in 2015.
-
+I am a software developer at [Derivco](https://www.derivco.com) in Durban, South Africa but this blog's content/opinion's are my own. I launched this blog as i want to share my knowledge and experiences as a production developer. Creating cool apps with .NET and Polymer is my current focus. I recently got into Python and it has sparked my interest in automating all things. As we all make mistakes some times, i want to share some funny 'works on my machine' moments i have experienced:-)
+ 
 >I have not failed. I've just found 10,000 ways that dont work. <cite>Thomas A. Edison</cite>
-
-As a hobby, John Doe authors the most influential design blog in Lithuania with over 100,000 page views a month. He lives in Vilnius with his beautiful wife, two boys and one girl.
 
 *Thank You for reading!*
