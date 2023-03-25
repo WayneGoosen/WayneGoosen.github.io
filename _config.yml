@@ -31,7 +31,7 @@ navigation:
 #  url: /about/
 #- text: Style Guides
 #  url: /style-guide/
-- text: Archives
+- text: All Posts
   url: /tags/
 
 # The shortname for your Disqus site to enable comments.
