@@ -6,12 +6,14 @@ import ProviderTheme from '@/components/ProviderTheme'
 import ProviderAnimations from '@/components/ProviderAnimations'
 import TwSizeIndicator from '@/components/TwSizeIndicator'
 import EditBlog from '@/components/editBlog'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 const { title, description, image, articleDate } = Astro.props
 ---
 
 <html lang='en' class='scroll-smooth'>
 	<head>
 		<BaseHead title={title} description={description} ogImage={image} articleDate={articleDate} />
+		<GoogleAnalytics measurementId='G-6SV71EBG61' />
 		<ProviderTheme />
 		<ProviderAnimations />
 	</head>
