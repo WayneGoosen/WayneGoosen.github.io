@@ -1,0 +1,249 @@
+---
+title: 'Azure Federated Identity Credentials for Terraform: A GitHub Actions Guide'
+description: 'Transition from authenticating via Service Principal with a client secret to using OpenID Connect'
+pubDate: 'May 11 2024'
+heroImage: '../../assets/images/fed-creds-github.png'
+category: 'DevOps'
+tags: 
+ - Azure
+ - GitHub
+ - Terraform
+ - GitHub Actions
+ - OIDC
+---
+
+I recently needed to transition from authenticating via Service Principal with a client secret to using OpenID Connect for Terraform actions within a few GitHub Actions workflows. This post is to showcase what I needed to change as there was not a single source of this information to perform this update.
+
+## TL;DR
+
+With an existing Terraform GitHub Action workflow in place these are the key changes:
+- Create Federated Credentials for your Service Principal in Azure
+- Add Azure Login action to workflow
+- Add `id-token: write` to permissions
+- Ensure environment variable `ARM_USE_OIDC: true` is used for Terraform actions
+
+## Overview of current setup
+
+### Action secrets and variables
+
+These are the current secrets configured for the `production` environment:
+1. AZURE_ENTRA_ID_CLIENT_ID
+2. AZURE_ENTRA_ID_SUBSCRIPTION_ID
+3. AZURE_ENTRA_ID_TENANT_ID
+4. AZURE_ENTRA_ID_CLIENT_SECRET
+
+### GitHub Actions workflow snippet
+
+This is a snippet from the full workflow showcasing the usage of the above secrets with the TF init action:
+
+```yaml
+- name: Terraform Init
+  id: init
+  env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    ARM_CLIENT_SECRET: ${{ secrets.AZURE_ENTRA_ID_CLIENT_SECRET }}
+  run: terraform init
+```
+
+## How to create federated credentials
+
+I will walk through 3 different ways of creating the required federated credentials:
+- Azure CLI
+- Terraform
+- Azure Portal
+
+Thereafter I will describe the configuration and GitHub Actions workflow code to use this authentication flow.
+
+### Parameters overview
+
+Below are the parameters with their descriptions to get a better understanding:
+- issuer: `https://token.actions.githubusercontent.com` The URL of the external identity provider (Limit of 600 characters). The combination of 'issuer' and 'subject' must be unique for any given application object.
+- subject: This value is used to establish a connection between your GitHub Actions workflow and Microsoft Entra ID. (Limit of 600 characters) - `repo:{Organization}/{Repository}:{Entity}`. Entity would be `environment:nameOfYourEnvironment`
+- audience: This value is used to establish a connection between your GitHub Actions workflow and Microsoft Entra ID. This value should be `api://AzureADTokenExchange` when using the GitHub Action for Azure Login. (Limit of 600 characters)
+
+### Using Azure CLI
+
+### Retrieve your App registration id
+
+Using the Azure CLI you would need your application registration id which can be retrieved with:
+
+```bash
+APP_REG_NAME="app-reg-name"
+APP_REG_ID=$(az ad app list --display-name $APP_REG_NAME --query "[0].appId" -o tsv)
+```
+
+### Create json parameter values
+
+You need to create json file with the required parameters, credentials.json:
+
+```json
+{
+    "name": "federated-credentials-name",
+    "issuer": "https://token.actions.githubusercontent.com",
+    "subject": "repo:Your-Organistaion/Your-Repository:environment:Your-Environment",
+    "description": "Federated credentials for GitHub Actions to deploy Azure resources using Terraform",
+    "audiences": [
+    "api://AzureADTokenExchange"
+    ]    
+}
+```
+
+### Exectue create
+
+```bash
+az ad app federated-credential create --id $APP_REG_ID --parameters credential.json
+```
+
+### Using terraform 
+
+If you are using terraform to manage your application registrations, you can add an additional resource to create the federated credentials.
+
+```jsx
+resource "azuread_application_federated_identity_credential" "fed_creds" {
+  application_id = azuread_application.vmss_app.id
+  display_name   = "federated-credentials-name"
+  description    = "Federated credentials for GitHub Actions to deploy Azure resources using Terraform"
+  audiences      = ["api://AzureADTokenExchange"]
+  issuer         = "https://token.actions.githubusercontent.com"
+  subject        = "repo:Your-Organistaion/Your-Repository:environment:Your-Environment"
+}
+```
+
+[Terraform Registry](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_federated_identity_credential)
+
+### Using the Azure portal
+
+Following these steps:
+
+1. Navigate to [https://portal.azure.com](https://portal.azure.com/)
+2. Select Microsoft Entra ID
+3. Select App registration blade within left panel
+4. Locate you App Registration and select it (dives in resource view)
+5. Select Certificates & secrets within left panel
+6. Select Federated credentials tab
+7. Select ‘Add credential’
+8. Select scenario of ‘GitHub Actions deploying Azure resources’
+9. Add details within each field
+
+## Clean up
+
+- Remove the client secret from the App Registration.
+- Remove secret AZURE_ENTRA_ID_CLIENT_SECRET within the GitHub repository settings.
+
+## Transition your GitHub Actions workflow
+
+### Add Azure login action
+
+You would need to add a new action:
+
+```yaml
+- name: Azure login
+  uses: azure/login@v2
+    with:
+      client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+      tenant-id: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
+      subscription-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+```
+
+Make sure to update the job permissions with:
+```yaml
+ permissions:
+      id-token: write
+```
+
+Otherwise you will land up with the following error `Error: Please make sure to give write permissions to id-token in the workflow.`
+
+### Update your tf actions
+
+Remove all instances of `ARM_CLIENT_SECRET` environment variable. Introduce new environment variable `ARM_USE_OIDC: true`, thus your task becomes:
+
+```yaml
+- name: Terraform Init
+  id: init
+  env:
+    client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
+    subscription-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    ARM_USE_OIDC: true
+
+```
+
+### Full GitHub Actions workflow
+
+```yaml
+name: Terraform CI
+
+on:
+  pull_request:
+    branches: main
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+          
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.0
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          ARM_USE_OIDC: true
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        working-directory: ./infra
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          ARM_USE_OIDC: true
+        working-directory: ./infra
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        working-directory: ./infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+          ARM_USE_OIDC: true
+        run: terraform apply -auto-approve
+```
+
+## References
+
+- [Configure Azure Active Directory Application to Trust a GitHub Repository](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configure-azure-active-directory-application-to-trust-a-github-repository)
+- [Azure Provider: Authenticating using a Service Principal with Open ID Connect](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc)
+- [Azure Login Action](https://github.com/Azure/login)
