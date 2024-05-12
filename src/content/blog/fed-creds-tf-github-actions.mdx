@@ -4,12 +4,12 @@ description: 'Transition from authenticating via Service Principal with a client
 pubDate: 'May 11 2024'
 heroImage: '../../assets/images/fed-creds-github.png'
 category: 'DevOps'
-tags: 
- - Azure
- - GitHub
- - Terraform
- - GitHub Actions
- - OIDC
+tags:
+  - Azure
+  - GitHub
+  - Terraform
+  - GitHub Actions
+  - OIDC
 ---
 
 I recently needed to transition from authenticating via Service Principal with a client secret to using OpenID Connect for Terraform actions within a few GitHub Actions workflows. This post is to showcase what I needed to change as there was not a single source of this information to perform this update.
@@ -17,7 +17,8 @@ I recently needed to transition from authenticating via Service Principal with a
 ## TL;DR
 
 With an existing Terraform GitHub Action workflow in place these are the key changes:
-- Create Federated Credentials for your Service Principal in Azure
+
+- Create Federated Identity Credentials for your Service Principal in Azure
 - Add Azure Login action to workflow
 - Add `id-token: write` to permissions
 - Ensure environment variable `ARM_USE_OIDC: true` is used for Terraform actions
@@ -27,6 +28,7 @@ With an existing Terraform GitHub Action workflow in place these are the key cha
 ### Action secrets and variables
 
 These are the current secrets configured for the `production` environment:
+
 1. AZURE_ENTRA_ID_CLIENT_ID
 2. AZURE_ENTRA_ID_SUBSCRIPTION_ID
 3. AZURE_ENTRA_ID_TENANT_ID
@@ -34,7 +36,7 @@ These are the current secrets configured for the `production` environment:
 
 ### GitHub Actions workflow snippet
 
-This is a snippet from the full workflow showcasing the usage of the above secrets with the TF init action:
+This is a snippet from the full workflow showcasing the usage of the above secrets with the Terraform init action:
 
 ```yaml
 - name: Terraform Init
@@ -47,9 +49,10 @@ This is a snippet from the full workflow showcasing the usage of the above secre
   run: terraform init
 ```
 
-## How to create federated credentials
+## How to create Federated Identity Credentials
 
-I will walk through 3 different ways of creating the required federated credentials:
+I will walk through 3 different ways of creating the required credentials:
+
 - Azure CLI
 - Terraform
 - Azure Portal
@@ -59,6 +62,7 @@ Thereafter I will describe the configuration and GitHub Actions workflow code to
 ### Parameters overview
 
 Below are the parameters with their descriptions to get a better understanding:
+
 - issuer: `https://token.actions.githubusercontent.com` The URL of the external identity provider (Limit of 600 characters). The combination of 'issuer' and 'subject' must be unique for any given application object.
 - subject: This value is used to establish a connection between your GitHub Actions workflow and Microsoft Entra ID. (Limit of 600 characters) - `repo:{Organization}/{Repository}:{Entity}`. Entity would be `environment:nameOfYourEnvironment`
 - audience: This value is used to establish a connection between your GitHub Actions workflow and Microsoft Entra ID. This value should be `api://AzureADTokenExchange` when using the GitHub Action for Azure Login. (Limit of 600 characters)
@@ -80,13 +84,11 @@ You need to create json file with the required parameters, credentials.json:
 
 ```json
 {
-    "name": "federated-credentials-name",
-    "issuer": "https://token.actions.githubusercontent.com",
-    "subject": "repo:Your-Organistaion/Your-Repository:environment:Your-Environment",
-    "description": "Federated credentials for GitHub Actions to deploy Azure resources using Terraform",
-    "audiences": [
-    "api://AzureADTokenExchange"
-    ]    
+	"name": "federated-identity-credentials-name",
+	"issuer": "https://token.actions.githubusercontent.com",
+	"subject": "repo:Your-Organistaion/Your-Repository:environment:Your-Environment",
+	"description": "Federated Identity Credentials for GitHub Actions to deploy Azure resources using Terraform",
+	"audiences": ["api://AzureADTokenExchange"]
 }
 ```
 
@@ -96,15 +98,15 @@ You need to create json file with the required parameters, credentials.json:
 az ad app federated-credential create --id $APP_REG_ID --parameters credential.json
 ```
 
-### Using terraform 
+### Using terraform
 
-If you are using terraform to manage your application registrations, you can add an additional resource to create the federated credentials.
+If you are using terraform to manage your application registrations, you can add an additional resource to create the Federated Identity Credentials.
 
 ```jsx
 resource "azuread_application_federated_identity_credential" "fed_creds" {
   application_id = azuread_application.vmss_app.id
-  display_name   = "federated-credentials-name"
-  description    = "Federated credentials for GitHub Actions to deploy Azure resources using Terraform"
+  display_name   = "federated-identity-credentials-name"
+  description    = "Federated Identity Credentials for GitHub Actions to deploy Azure resources using Terraform"
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
   subject        = "repo:Your-Organistaion/Your-Repository:environment:Your-Environment"
@@ -148,14 +150,15 @@ You would need to add a new action:
 ```
 
 Make sure to update the job permissions with:
+
 ```yaml
- permissions:
-      id-token: write
+permissions:
+  id-token: write
 ```
 
 Otherwise you will land up with the following error `Error: Please make sure to give write permissions to id-token in the workflow.`
 
-### Update your tf actions
+### Update your Terraform actions
 
 Remove all instances of `ARM_CLIENT_SECRET` environment variable. Introduce new environment variable `ARM_USE_OIDC: true`, thus your task becomes:
 
@@ -167,7 +170,6 @@ Remove all instances of `ARM_CLIENT_SECRET` environment variable. Introduce new 
     tenant-id: ${{ secrets.AZURE_ENTRA_ID_SUBSCRIPTION_ID }}
     subscription-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
     ARM_USE_OIDC: true
-
 ```
 
 ### Full GitHub Actions workflow
@@ -189,14 +191,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-          
+
       - name: Azure login
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
-          
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
