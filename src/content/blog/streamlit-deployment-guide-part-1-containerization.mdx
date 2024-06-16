@@ -1,7 +1,7 @@
 ---
 heroImage: /src/assets/images/streamlitdocker.png
 category: Containers
-description: 'A walkthrough of containerizing a Streamlit application'
+description: 'A step-by-step guide on containerizing a Streamlit application using Docker, detailing the creation of a Dockerfile and the commands needed to build and run the container.'
 pubDate: 'June 16 2024'
 tags:
   - docker
@@ -27,6 +27,48 @@ Do you want to deploy your Streamlit application on Azure right now? Use the [te
 ## TL;DR
 
 Read the [completed Dockerfile](#completed-dockerfile), execute commands to [build the image](#build-the-docker-image) and [run the container](run-the-docker-container).
+
+## Streamlit Application Files
+
+Before proceeding with the steps, ensure the following Streamlit application files are available. You can find these files in the [app folder](https://github.com/WayneGoosen/azure-streamlit-poc/tree/main/app) of the GitHub repository.
+
+### .streamlit/config.toml
+
+```toml
+[client]
+showErrorDetails = false
+toolbarMode = "auto"
+showSidebarNavigation = true
+
+[theme]
+base = "dark"
+
+[logger]
+level = "debug"
+messageFormat = "%(asctime)s %(message)s"
+
+[server]
+port = 80
+
+[browser]
+gatherUsageStats = false
+```
+
+### app.py
+
+```python
+import os
+import streamlit as st
+
+st.title("Streamlit on Azure 👋")
+st.header('Running on a Web App in a Container 🐳', divider='rainbow')
+```
+
+### requirements.txt
+
+```
+streamlit
+```
 
 ## Create a Dockerfile
 
