@@ -1,0 +1,262 @@
+---
+heroImage: /src/assets/images/streamlitdocker.png
+category: Containers
+description: 'A step-by-step guide on containerizing a Streamlit application using Docker, detailing the creation of a Dockerfile and the commands needed to build and run the container.'
+pubDate: 'June 16 2024'
+tags:
+  - docker
+  - streamlit
+  - containers
+title: 'Streamlit Deployment Guide Part 1: Containerizing a Streamlit App'
+---
+
+When I needed to create a quick proof of concept (PoC) using [Streamlit](https://streamlit.io/), I faced two constraints:
+
+- Self-hosted instead of using [Streamlit Community Cloud](https://streamlit.io/cloud).
+- Control access to the deployed website.
+
+With this in mind, containerizing the application and hosting it on Azure was the best solution with my skillset. This post kicks off a series detailing the process, broken down into the following parts:
+
+- **Part 1**: Containerizing a Streamlit app. **You are here** 😊
+- **Part 2**: GitHub Workflow for Building and Publishing to ghcr.io
+- **Part 3**: Azure Infrastructure via Terraform
+- **Part 4**: GitHub Workflow for Terraform Apply & Destroy
+
+Do you want to deploy your Streamlit application on Azure right now? Use the [template repository](https://github.com/WayneGoosen/azure-streamlit-poc) 🚀
+
+## TL;DR
+
+Read the [completed Dockerfile](#completed-dockerfile), execute commands to [build the image](#build-the-docker-image) and [run the container](run-the-docker-container).
+
+## Streamlit Application Files
+
+Before proceeding with the steps, ensure the following Streamlit application files are available. You can find these files in the [app folder](https://github.com/WayneGoosen/azure-streamlit-poc/tree/main/app) of the GitHub repository.
+
+### .streamlit/config.toml
+
+```toml
+[client]
+showErrorDetails = false
+toolbarMode = "auto"
+showSidebarNavigation = true
+
+[theme]
+base = "dark"
+
+[logger]
+level = "debug"
+messageFormat = "%(asctime)s %(message)s"
+
+[server]
+port = 80
+
+[browser]
+gatherUsageStats = false
+```
+
+### app.py
+
+```python
+import os
+import streamlit as st
+
+st.title("Streamlit on Azure 👋")
+st.header('Running on a Web App in a Container 🐳', divider='rainbow')
+```
+
+### requirements.txt
+
+```
+streamlit
+```
+
+## Create a Dockerfile
+
+**Note:** Docker is a prerequisite, read the [install documentation](https://docs.docker.com/get-docker/) for more details.
+
+### Completed Dockerfile
+
+```dockerfile
+FROM python:3.9-slim
+
+LABEL maintainer="Wayne Goosen" \
+      version="1.0.0" \
+      description="Streamlit template for Docker. Uses app.py as the main file."
+
+WORKDIR /app
+
+RUN apt-get update \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+RUN pip3 install -r requirements.txt
+
+COPY .streamlit/config.toml .streamlit/
+COPY app.py .
+
+RUN groupadd -g 1005 appgroup && \
+    useradd -u 1005 -g appgroup appuser && \
+    chown -R appuser:appgroup /app
+
+EXPOSE 80
+
+USER appuser
+
+ENTRYPOINT ["streamlit", "run"]
+CMD ["app.py"]
+```
+
+### Dockerfile Walkthrough
+
+#### Specify Base Image
+
+```dockerfile
+FROM python:3.9-slim
+```
+
+- Uses a slim version of Python 3.9 as the base image, ensuring a minimal and efficient environment.
+
+#### Add Metadata Labels
+
+```dockerfile
+LABEL maintainer="Wayne Goosen" \
+      version="1.0.0" \
+      description="Streamlit template for Docker. Uses app.py as the main file."
+```
+
+- Provides metadata about the Docker image, including the maintainer, version, and description.
+
+#### Set Working Directory
+
+```dockerfile
+WORKDIR /app
+```
+
+- Sets the working directory inside the container to `/app`.
+- Note: Streamlit version 1.10.0 and higher, Streamlit apps cannot be run from the root directory of Linux distributions.
+
+#### Update Package List
+
+```dockerfile
+RUN apt-get update \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+- Updates the package list for the APT package manager and then removes the cached package lists to reduce image size.
+
+#### Copy Requirements File
+
+```dockerfile
+COPY requirements.txt .
+```
+
+- Copies `requirements.txt` from the host machine to the current working directory in the container (`/app`).
+
+#### Install Python Dependencies
+
+```dockerfile
+RUN pip3 install -r requirements.txt
+```
+
+- Installs the Python dependencies listed in `requirements.txt` using `pip`.
+
+#### Copy Configuration and Application Files
+
+```dockerfile
+COPY .streamlit/config.toml .streamlit/
+COPY app.py .
+```
+
+- Copies the Streamlit configuration file and the main application file (`app.py`) into the container. Separated to support caching.
+
+#### Create Dedicated Application User and Group
+
+```dockerfile
+RUN groupadd -g 1005 appgroup && \
+    useradd -u 1005 -g appgroup appuser && \
+    chown -R appuser:appgroup /app
+```
+
+- Creates a new group `appgroup` with GID 1005.
+- Creates a new user `appuser` with UID 1005 and adds it to `appgroup`.
+- Changes the ownership of the `/app` directory to `appuser:appgroup`.
+
+#### Expose Port
+
+```dockerfile
+EXPOSE 80
+```
+
+- Informs Docker that the container will listen on port 80 at runtime.
+
+#### Switch to Non-Root User
+
+    ```dockerfile
+    USER appuser
+    ```
+    - Switches to the newly created `appuser` to run the application, enhancing security.
+
+#### Set Entry Point and Command
+
+    ```dockerfile
+    ENTRYPOINT ["streamlit", "run"]
+    CMD ["app.py"]
+    ```
+    - Sets the entry point (command that runs when a container starts) to `streamlit run`, and the default command to `app.py`, which runs the Streamlit application. This approach allows you to run the container with your custom parameters to `streamlit run`
+
+## Build the Docker Image
+
+To build the Docker image, navigate to the directory containing the Dockerfile and run the following command:
+
+```bash
+docker build -t streamlit-app .
+```
+
+The -t flag is used to tag the image. Here, we have tagged the image streamlit-app. If you run:
+
+```bash
+docker images
+```
+
+You should see a streamlit-app image under the REPOSITORY column. For example:
+
+| REPOSITORY    | TAG    | IMAGE ID     | CREATED            | SIZE  |
+| ------------- | ------ | ------------ | ------------------ | ----- |
+| streamlit-app | latest | 70b0759a094d | About a minute ago | 628MB |
+
+## Run the Docker Container
+
+To run the Docker container, use the following command:
+
+```bash
+docker run -p 8501:80 streamlit-app:latest
+```
+
+To view your app, browse to http://0.0.0.0:8501 or http://localhost:8501
+
+## Streamlit Configuration
+
+In order to provide Streamlit configuration, there are two approaches:
+
+- config.toml file ([What is TOML?](https://toml.io/))
+- command line parameters
+
+In this example it uses the config.toml and you can find more configuration options in the [documentation](https://docs.streamlit.io/develop/api-reference/configuration/config.toml). Below I will showcase an example setting the port below using both approaches.
+
+### Config.toml
+
+```toml
+[server]
+port = 80
+```
+
+### Parameters
+
+```bash
+streamlit run app.py --server.port=80
+```
+
+## References
+
+- [Deploy streamlit using Docker - Official Streamlit documentation on how to deploy using Docker.](https://docs.streamlit.io/deploy/tutorials/docker)
