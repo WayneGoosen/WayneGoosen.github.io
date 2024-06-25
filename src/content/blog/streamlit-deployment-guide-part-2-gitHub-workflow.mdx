@@ -118,7 +118,7 @@ jobs:
 name: Docker Image Build and Push
 ```
 
-- This is the name of the GitHub Actions workflow.
+This is the name of the GitHub Actions workflow.
 
 #### Triggers
 
@@ -272,30 +272,6 @@ GitVersion is a tool that helps automate versioning of software projects based o
 The provided gitversion file contains configuration settings for the GitVersion tool, which is used to generate a version for our Docker image. It specifies the versioning scheme, commit message patterns for incrementing versions, fallback tags, and other options related to continuous delivery and versioning.
 
 The main point is that it uses the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification to create the version number.
-
-Major Version Bump
-To trigger a major version update, your commit message needs to include a breaking change note. This can be done by including "BREAKING CHANGE:" followed by a description of the change in the body of the commit message. Alternatively, appending a "!" after the type scope also indicates a breaking change.
-
-Example:
-
-.
-Minor Version Bump
-A minor version is bumped up by features that are new but backward compatible. According to the configuration, any commit that starts with "feat" (indicating a new feature) and does not include a breaking change will trigger a minor version update.
-
-Example:
-
-.
-Patch Version Bump
-Patch versions are for backward-compatible bug fixes. According to the configuration, commits that start with "fix" or other types like "build", "chore", "ci", "docs", "perf", "refactor", "revert", "style", "test" (excluding "feat") and do not include breaking changes will trigger a patch version update.
-
-Example:
-
-These commit messages are crafted based on the provided GitVersion configuration and should be used as part of your version control strategy to automatically manage semantic versioning of your software.
-
-major-version-bump-message: "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\\([\\w\\s-]_\\))?(!:|:._\\n\\n((.+\\n)+\\n)?BREAKING CHANGE:\\s.+)"
-minor-version-bump-message: "^(feat)(\\([\\w\\s-]_\\))?:"
-patch-version-bump-message: "^(build|chore|ci|docs|fix|perf|refactor|revert|style|test)(\\([\\w\\s-]_\\))?:"
-bump
 
 #### Configuration file
 
