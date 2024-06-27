@@ -17,7 +17,7 @@ title: >-
 
 This showcases a Github workflow walkthrough of building and publishing a Docker image to GitHub Container Registry. It continues a series detailing the process of deploying Streamlit app to Azure, broken down into the following parts:
 
-- **Part 1**: Containerizing a Streamlit app.
+- [**Part 1**: Containerizing a Streamlit app.](https://blog.waynegoosen.com/post/streamlit-deployment-guide-part-1-containerization/)
 - **Part 2**: GitHub Workflow for Building and Publishing to ghcr.io **You are here** 😊
 - **Part 3**: Azure Infrastructure via Terraform
 - **Part 4**: GitHub Workflow for Terraform Apply & Destroy
@@ -110,7 +110,7 @@ jobs:
             ${{ env.REGISTRY }}/${{ steps.get-image-name.outputs.image-name }}:${{ steps.gitversion.outputs.semVer }}
 ```
 
-### Workflow walkthrough
+### Workflow Walkthrough
 
 #### Workflow Definition
 
@@ -131,7 +131,7 @@ on:
   workflow_dispatch:
 ```
 
-The workflow triggers on pushes to the "main" branch and only if the changes are made in the 'app' directory. The 'workflow_dispatch' Allows the workflow to be triggered manually.
+The workflow triggers on pushes to the "main" branch and only if the changes are made in the 'app' directory. The 'workflow_dispatch' allows the workflow to be triggered manually.
 
 #### Concurrency
 
@@ -140,7 +140,7 @@ currency:
 - group: build-and-push-image
 ```
 
-Ensures that if the workflow is triggered again while a previous run is in progress, the new run will queue until the previous one completes.
+This ensures that if the workflow is triggered again while a previous run is in progress, the new run will queue until the previous one completes.
 
 #### Jobs
 
@@ -152,8 +152,11 @@ jobs:
     env:
       REGISTRY: ghcr.io
 ```
-There is a single job defined which behavior is to build and push the image. 'runs-on' specifies it should run on the latest version of Ubuntu.
+
+There is a single job defined which covers the full behavior to build and push the image. 'runs-on' specifies it should run on the latest version of Ubuntu.
 'env' allows you to set environment variables available to all tasks within the job. 'REGISTRY' represents the Docker registry and is set to 'ghcr.io'
+
+#### permissions
 
 ```
 permissions:
@@ -161,7 +164,7 @@ permissions:
   packages: write
 ```
 
-Grants the necessary permissions for the job to interact with the repository. Contents permission is need to checkout the repository and specifically write is needed to be able to tag the repository. Packages write is needed to publish the Docker image.
+Grants the necessary permissions for the job to interact with the repository. Contents permission is needed to checkout the repository and specifically write is needed to be able to tag the repository. Packages write is needed to publish the Docker image.
 
 #### Steps
 
@@ -195,7 +198,7 @@ Retrieves the repository name and converts it to lowercase for use as the Docker
     versionSpec: '5.x'
 ```
 
-Installs GitVersion tool for semantic versioning. This tool is used to generate a version for our Docker image. [See explanation of GitVersion](#what-is-gitversions) 
+Installs GitVersion tool for semantic versioning. This tool is used to generate a version for our Docker image. [See explanation of GitVersion](#what-is-gitversion)
 
 ##### 4. Execute GitVersion to Get the Version Number
 
@@ -205,7 +208,7 @@ Installs GitVersion tool for semantic versioning. This tool is used to generate 
   uses: gittools/actions/gitversion/execute@v1.1.1
 ```
 
-Runs GitVersion execute to generate the semantic version number.
+Runs GitVersion execute to generate the semantic version number. It sets the version number as output and available as `steps.gitversion.outputs.semVer`
 
 ##### 5. Set Up Git User for Tagging
 
@@ -243,7 +246,6 @@ Pushes the created tag to the GitHub repository.
     username: ${{ github.actor }}
     password: ${{ secrets.GITHUB_TOKEN }}
 ```
-
 
 Logs into the container registry using the GitHub actor and token.
 
