@@ -21,3 +21,175 @@ This showcases the Terraform code to manage the Infrastructure to host your Stre
 - **Part 4**: GitHub Workflow for Terraform Apply & Destroy
 
 Do you want to deploy your Streamlit application on Azure right now? Use the [template repository](https://github.com/WayneGoosen/azure-streamlit-poc) 🚀
+
+## TL;DR
+
+See the full source in [infra directory](https://github.com/WayneGoosen/azure-streamlit-poc/tree/main/infra).
+
+## Prerequisites
+
+This requires an Azure subscription and a docker image published to GitHub Container Registry. It also assumes basic knowledge in using Terraform.
+
+## Create Terraform Code
+
+The code is split into the following files:
+
+- main.tf
+- providers.tf
+- variables.tf
+- locals.tf
+- web-app.tf
+
+### main.tf
+
+```hcl
+data "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
+}
+```
+
+### providers.tf
+
+```hcl
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.110.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.1"
+    }
+  }
+
+  backend "azurerm" {
+    resource_group_name  = "rg-streamlit-poc"
+    storage_account_name = "streamlittfstate"
+    container_name       = "tfstate"
+    key                  = "strealitpoctfstate.tfstate"
+  }
+
+  required_version = ">= 1.8.0"
+}
+
+provider "azurerm" {
+  features {}
+}
+```
+
+### variables.tf
+
+```hcl
+variable "resource_group_name" {
+  type        = string
+  default     = "rg-streamlit-poc"
+}
+
+variable "docker_image_name" {
+  type        = string
+  default     = "waynegoosen/azure-streamlit-poc:0.1.1"
+}
+
+variable "docker_registry_url" {
+  type        = string
+  default     = "https://ghcr.io"
+}
+
+variable "use_docker_registry_auth" {
+  description = "Flag to indicate if Docker registry authentication is required"
+  type        = bool
+  default     = false
+}
+
+variable "docker_registry_username" {
+  description = "Docker registry username"
+  type        = string
+  default     = ""
+}
+
+variable "docker_registry_password" {
+  description = "Docker registry password"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "app_settings" {
+  type        = map(string)
+  default     = {}
+  description = "Application setting"
+}
+
+variable "app_service_plan_sku_name" {
+  type        = string
+  default     = "B1"
+  validation {
+    condition     = contains(["B1", "B2", "B3", "D1", "F1", "P1v2", "P2v2", "P3v2", "P0v3", "P1v3", "P2v3", "P3v3", "P1mv3", "P2mv3", "P3mv3", "P4mv3", "P5mv3"], var.app_service_plan_sku_name)
+    error_message = "The app_service_plan_sku_name must be one of the following: B1, B2, B3, D1, F1, P1v2, P2v2, P3v2, P0v3, P1v3, P2v3, P3v3, P1mv3, P2mv3, P3mv3, P4mv3, P5mv3."
+  }
+}
+
+variable "app_name" {
+  type        = string
+  default     = "azure-streamlit-poc"
+}
+
+variable "environment" {
+  type        = string
+  default     = "prod"
+}
+```
+
+### locals.tf
+
+```hcl
+locals {
+  app_service_plan_name = "asp-${var.app_name}"
+  linux_web_app_name = "app-${var.app_name}"
+  app_settings = {
+    ENV = var.environment
+  }
+}
+```
+
+### web-app.tf
+
+```hcl
+resource "azurerm_service_plan" "service_plan" {
+  name                = local.app_service_plan_name
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  os_type             = "Linux"
+  sku_name            = var.app_service_plan_sku_name
+  tags = {}
+}
+
+resource "random_id" "random_chars_web_app_name" {
+  byte_length = 2
+}
+
+resource "azurerm_linux_web_app" "web-app" {
+  name                = "${local.linux_web_app_name}-${random_id.random_chars_web_app_name.hex}"
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  service_plan_id     = azurerm_service_plan.service_plan.id
+  app_settings        = merge(local.app_settings, var.app_settings)
+
+  site_config {
+    always_on        = true # always_on cannot be set to true when using Free, F1, D1 Sku
+    application_stack {
+      docker_image_name = var.docker_image_name
+      docker_registry_url = var.docker_registry_url
+      docker_registry_username = var.use_docker_registry_auth ? var.docker_registry_username : null
+      docker_registry_password = var.use_docker_registry_auth ? var.docker_registry_password : null
+    }
+  }
+
+  logs {
+    application_logs {
+        file_system_level = "Verbose"
+    }
+  }
+}
+```
