@@ -42,6 +42,8 @@ The code is split into the following files:
 
 ### main.tf
 
+This Terrafom configuration assumes the resource group has already been created and permissions assigned only to this reasource group for the service principle. This data source uses the `resource_group_name` variable to retrieve the azurerm_resource_group information.
+
 ```hcl
 data "azurerm_resource_group" "rg" {
   name = var.resource_group_name
@@ -49,6 +51,10 @@ data "azurerm_resource_group" "rg" {
 ```
 
 ### providers.tf
+
+This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate within a storage account within Azure. random provide is also added as it is used to generate some random characters as you will see later.
+
+See [providers configuration](https://developer.hashicorp.com/terraform/language/providers/configuration)
 
 ```hcl
 terraform {
@@ -79,6 +85,8 @@ provider "azurerm" {
 ```
 
 ### variables.tf
+
+This file holds all the variable definitions. Allowing us to provide any custom values to our Terraform resources. See the description of the variable to understand each.
 
 ```hcl
 variable "resource_group_name" {
@@ -142,6 +150,8 @@ variable "environment" {
 ```
 
 ### locals.tf
+
+See [locals](https://developer.hashicorp.com/terraform/language/values/locals)
 
 ```hcl
 locals {
