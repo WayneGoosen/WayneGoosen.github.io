@@ -151,6 +151,8 @@ variable "environment" {
 
 ### locals.tf
 
+With our locals we are able to store values that can be shared and built up. Like providing a prefix for the app_service_plan_name.
+
 See [locals](https://developer.hashicorp.com/terraform/language/values/locals)
 
 ```hcl
@@ -164,6 +166,8 @@ locals {
 ```
 
 ### web-app.tf
+
+This is the required resources to setup an Azure Web App. The interesting part is the application stack which configures it to use a docker image.
 
 ```hcl
 resource "azurerm_service_plan" "service_plan" {
@@ -193,12 +197,6 @@ resource "azurerm_linux_web_app" "web-app" {
       docker_registry_url = var.docker_registry_url
       docker_registry_username = var.use_docker_registry_auth ? var.docker_registry_username : null
       docker_registry_password = var.use_docker_registry_auth ? var.docker_registry_password : null
-    }
-  }
-
-  logs {
-    application_logs {
-        file_system_level = "Verbose"
     }
   }
 }
