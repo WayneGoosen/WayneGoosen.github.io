@@ -13,7 +13,7 @@ title: >-
   Streamlit Deployment Guide Part 3: Azure Infrastructure via Terraform
 ---
 
-This showcases the Terraform code to manage the Infrastructure to host your Streamlit application. It continues a series detailing the process of deploying Streamlit app to Azure, broken down into the following parts:
+This showcases the Terraform code to manage the Infrastructure to host your Streamlit application. It continues a series detailing the process of deploying a Streamlit app to Azure, broken down into the following parts:
 
 - [**Part 1**: Containerizing a Streamlit app.](https://blog.waynegoosen.com/post/streamlit-deployment-guide-part-1-containerization/)
 - [**Part 2**: GitHub Workflow for Building and Publishing to ghcr.io ](https://blog.waynegoosen.com/post/streamlit-deployment-guide-part-2-github-workflow/)
@@ -28,9 +28,9 @@ See the full source in [infra directory](https://github.com/WayneGoosen/azure-st
 
 ## Prerequisites
 
-This requires an Azure subscription and a docker image published to GitHub Container Registry. It also assumes basic knowledge in using Terraform.
+This requires an Azure subscription and a docker image published to GitHub Container Registry if you want to provision the infrastructure. It also assumes basic knowledge in using Terraform HashiCorp Configuration Language and for [Terraform](https://developer.hashicorp.com/terraform/install) to be installed.
 
-## Create Terraform Code
+## Write Terraform HCL
 
 The code is split into the following files:
 
@@ -42,7 +42,9 @@ The code is split into the following files:
 
 ### main.tf
 
-This Terrafom configuration assumes the resource group has already been created and permissions assigned only to this reasource group for the service principle. This data source uses the `resource_group_name` variable to retrieve the azurerm_resource_group information.
+This logic assumes the resource group has already been created and permissions assigned only to this reasource group for the service principle. This data source uses the `resource_group_name` variable to retrieve the azurerm_resource_group information.
+
+See [Data Sources](https://developer.hashicorp.com/terraform/language/data-sources)
 
 ```hcl
 data "azurerm_resource_group" "rg" {
@@ -52,7 +54,7 @@ data "azurerm_resource_group" "rg" {
 
 ### providers.tf
 
-This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate within a storage account within Azure. random provide is also added as it is used to generate some random characters as you will see later.
+This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate within a storage account within Azure. random provider is also added as it is used to generate some random characters as you will see later.
 
 See [providers configuration](https://developer.hashicorp.com/terraform/language/providers/configuration)
 
@@ -86,7 +88,9 @@ provider "azurerm" {
 
 ### variables.tf
 
-This file holds all the variable definitions. Allowing us to provide any custom values to our Terraform resources. See the description of the variable to understand each.
+This file holds all the input variable blocks for our root module. Allowing us to provide any custom values using CLI options. See the description of the variable to understand each.
+
+See [Input Variables](https://developer.hashicorp.com/terraform/language/values/variables)
 
 ```hcl
 variable "resource_group_name" {
@@ -153,7 +157,7 @@ variable "environment" {
 
 With our locals we are able to store values that can be shared and built up. Like providing a prefix for the app_service_plan_name.
 
-See [locals](https://developer.hashicorp.com/terraform/language/values/locals)
+See [Locals](https://developer.hashicorp.com/terraform/language/values/locals)
 
 ```hcl
 locals {
@@ -167,7 +171,7 @@ locals {
 
 ### web-app.tf
 
-This is the required resources to setup an Azure Web App. The interesting part is the application stack which configures it to use a docker image.
+This is the required resources to setup an Azure Web App. The application stack block is where the docker configuration is set. It has a flag 'use_docker_registry_auth' to set username/password if authentication is required with the Container Registry.
 
 ```hcl
 resource "azurerm_service_plan" "service_plan" {
@@ -201,3 +205,16 @@ resource "azurerm_linux_web_app" "web-app" {
   }
 }
 ```
+
+Resources:
+
+- [Azurerm_service_plan](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/service_plan)
+- [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)
+
+## Setup Azure provider
+
+Follow one of the methods for [authenticating to Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
+
+## Terraform Plan
+
+## Terraform Apply
