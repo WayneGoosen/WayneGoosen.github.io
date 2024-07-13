@@ -1,5 +1,5 @@
 ---
-heroImage: /src/assets/images/bg.jpg
+heroImage: /src/assets/images/Terraform.png
 category: CICD
 description: >-
   A walkthrough guide of creating the Terraform code to manage the Infrastructure to host your Streamlit application on Azure.
@@ -54,7 +54,7 @@ data "azurerm_resource_group" "rg" {
 
 ### providers.tf
 
-This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate within a storage account within Azure. random provider is also added as it is used to generate some random characters as you will see later.
+This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate in a storage account within Azure. random provider is also added as it is used to generate some random characters as you will see later.
 
 See [providers configuration](https://developer.hashicorp.com/terraform/language/providers/configuration)
 
@@ -213,8 +213,26 @@ Resources:
 
 ## Setup Azure provider
 
-Follow one of the methods for [authenticating to Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
+Follow one of the methods for [authenticating to Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs). For testing this local I would suggest using Azure CLI.
 
-## Terraform Plan
+## Terraform Plan & Apply
 
-## Terraform Apply
+Run plan to view the expected resources to be created:
+
+```bash
+terraform plan
+```
+
+You should see the following last line:
+
+**Plan: 3 to add, 0 to change, 0 to destroy.**
+
+It will create a service plan, linux web app and a random id for the web app name.
+
+Finally to create the resources, run apply:
+
+```bash
+terraform apply
+```
+
+When prompted enter yes to create the resources shown. Alternatively supply the '-auto-approve' option to skip the interaction.
