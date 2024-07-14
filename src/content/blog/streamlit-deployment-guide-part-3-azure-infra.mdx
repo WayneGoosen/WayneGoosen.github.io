@@ -1,14 +1,14 @@
 ---
 heroImage: /src/assets/images/Terraform.png
-category: CICD
+category: IaC
 description: >-
-  A walkthrough guide of creating the Terraform code to manage the Infrastructure to host your Streamlit application on Azure.
-pubDate: 2024-06-30
-draft: true
+  A step-by-step guide for creating the Terraform code to manage the infrastructure needed to host your Streamlit application on Azure.
+pubDate: 2024-07-14
+draft: false
 tags:
   - terraform
   - azure
-  - IaC
+  - iac
 title: >-
   Streamlit Deployment Guide Part 3: Azure Infrastructure via Terraform
 ---
@@ -24,15 +24,15 @@ Do you want to deploy your Streamlit application on Azure right now? Use the [te
 
 ## TL;DR
 
-See the full source in [infra directory](https://github.com/WayneGoosen/azure-streamlit-poc/tree/main/infra).
+See the full Terraform code in the [infra directory](https://github.com/WayneGoosen/azure-streamlit-poc/tree/main/infra).
 
 ## Prerequisites
 
-This requires an Azure subscription and a docker image published to GitHub Container Registry if you want to provision the infrastructure. It also assumes basic knowledge in using Terraform HashiCorp Configuration Language and for [Terraform](https://developer.hashicorp.com/terraform/install) to be installed.
+You need an Azure subscription and a Docker image published to GitHub Container Registry to provision the infrastructure. Additionally, basic knowledge of using Terraform’s HashiCorp Configuration Language is assumed, and [Terraform](https://developer.hashicorp.com/terraform/install) must be installed.
 
 ## Write Terraform HCL
 
-The code is split into the following files:
+The code is divided into the following files:
 
 - main.tf
 - providers.tf
@@ -42,7 +42,7 @@ The code is split into the following files:
 
 ### main.tf
 
-This logic assumes the resource group has already been created and permissions assigned only to this reasource group for the service principle. This data source uses the `resource_group_name` variable to retrieve the azurerm_resource_group information.
+This code assumes the resource group has already been created and permissions assigned only to this resource group for the service principal. It uses the resource_group_name variable to retrieve the azurerm_resource_group information.
 
 See [Data Sources](https://developer.hashicorp.com/terraform/language/data-sources)
 
@@ -54,7 +54,7 @@ data "azurerm_resource_group" "rg" {
 
 ### providers.tf
 
-This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate in a storage account within Azure. random provider is also added as it is used to generate some random characters as you will see later.
+This is the basic providers configuration. As we are using Azure, the azurerm provider is specified along with the backend configuration to store the tfstate in a storage account within Azure. The random provider is also added as it is used to generate some random characters, which will be explained later.
 
 See [providers configuration](https://developer.hashicorp.com/terraform/language/providers/configuration)
 
@@ -88,7 +88,7 @@ provider "azurerm" {
 
 ### variables.tf
 
-This file holds all the input variable blocks for our root module. Allowing us to provide any custom values using CLI options. See the description of the variable to understand each.
+This file contains all the input variable blocks for our root module, allowing us to provide custom values using CLI options. See the description of each variable to understand its purpose.
 
 See [Input Variables](https://developer.hashicorp.com/terraform/language/values/variables)
 
@@ -155,7 +155,7 @@ variable "environment" {
 
 ### locals.tf
 
-With our locals we are able to store values that can be shared and built up. Like providing a prefix for the app_service_plan_name.
+The locals block allows us to store values that can be shared and built up, such as providing a prefix for the app_service_plan_name.
 
 See [Locals](https://developer.hashicorp.com/terraform/language/values/locals)
 
@@ -171,7 +171,7 @@ locals {
 
 ### web-app.tf
 
-This is the required resources to setup an Azure Web App. The application stack block is where the docker configuration is set. It has a flag 'use_docker_registry_auth' to set username/password if authentication is required with the Container Registry.
+This file defines the required resources to set up an Azure Web App. The application_stack block is where the Docker configuration is set. The flag use_docker_registry_auth is used to set the username and password if authentication is required with the Container Registry. Random id is used to generate random chars for the web app name for uniqueness.
 
 ```hcl
 resource "azurerm_service_plan" "service_plan" {
@@ -211,13 +211,13 @@ Resources:
 - [Azurerm_service_plan](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/service_plan)
 - [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)
 
-## Setup Azure provider
+## Setup Azure Provider
 
-Follow one of the methods for [authenticating to Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs). For testing this local I would suggest using Azure CLI.
+Follow one of the methods for [authenticating to Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs). For local testing, I suggest using Azure CLI.
 
 ## Terraform Plan & Apply
 
-Run plan to view the expected resources to be created:
+Run terraform plan to view the expected resources to be created:
 
 ```bash
 terraform plan
@@ -227,12 +227,24 @@ You should see the following last line:
 
 **Plan: 3 to add, 0 to change, 0 to destroy.**
 
-It will create a service plan, linux web app and a random id for the web app name.
+This will create a service plan, a Linux web app, and a random ID for the web app name.
 
-Finally to create the resources, run apply:
+Finally, to create the resources, run terraform apply:
 
 ```bash
 terraform apply
 ```
 
-When prompted enter yes to create the resources shown. Alternatively supply the '-auto-approve' option to skip the interaction.
+When prompted, enter yes to create the resources shown. Alternatively, use the -auto-approve option to skip the confirmation step.
+
+## View the Website
+
+Follow these steps to view your deployed website:
+
+1. Open the [Azure portal](https://portal.azure.com/)
+2. Navigate to the web app within the resource group rg-streamlit-poc.
+3. In the overview section, you should see ‘Default Domain’ with a link. Click it. The URL should be similar to https://app-azure-streamlit-poc-b548.azurewebsites.net/.
+
+![A Streamlit website preview..](/src/assets/images/website.png)
+
+In the next part, we will go through automating the infrastructure provisioning via GitHub workflows.
