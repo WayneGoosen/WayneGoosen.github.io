@@ -43,6 +43,27 @@ If you have your own Terraform configuration, ensure all the dependent files are
 
 The Workflow file should be stored within the following folder: `.github/workflows/`. A concise name could be `docker-image-build-and-push.yaml`.
 
+### Setup Azure Application Registration
+
+See [Azure Federated Identity Credentials for Terraform: A GitHub Actions Guide](https://blog.waynegoosen.com/post/fed-creds-tf-github-actions/).
+
+### Setup environment
+
+1. Navigate to the your repository on GitHub.
+2. Go to “Settings” > “Environments”.
+3. Create a new environment 'production'
+
+### Add secrets
+
+Adding Secrets:
+
+1. Navigate to the your repository on GitHub.
+2. Go to “Settings” > “Environments” > Select “production”.
+3. Go to "Environment secrets" and select "Add environment secret"
+4. Add the following secrets using the output of step 4: AZURE_ENTRA_ID_CLIENT_ID, AZURE_ENTRA_ID_TENANT_ID & AZURE_SUBSCRIPTION_ID
+
+These will be used as environment variables provided to the terraform actions.
+
 ### Completed Apply Workflow
 
 ```yaml
