@@ -169,7 +169,7 @@ jobs:
 ##### Workflow Definition
 
 ```yaml
-name: Docker Image Build and Push
+name: Terraform Plan & Apply Infrastructure
 ```
 
 The name of the workflow which is shown under the Actions tab. This allows you to set a readable name for your Workflow, if omitted the file name will be shown.
@@ -181,11 +181,147 @@ on:
   push:
     branches: ['main']
     paths:
-      - 'app/**'
+      - 'infra/**'
+    tags:
+      - '*'
   workflow_dispatch:
 ```
 
-The workflow triggers on pushes to the "main" branch and only if the changes are made in the 'app' directory. The 'workflow_dispatch' allows the workflow to be triggered manually.
+The workflow triggers on pushes to the "main" branch and only if the changes are made in the 'infra' directory. The 'workflow_dispatch' allows the workflow to be triggered manually. Additionally there is a trigger for any tags created on the repository.
+
+#### Jobs
+
+```yaml
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+```
+
+There is a single job defined which covers the full behavior to run the Terraform commands. 'runs-on' specifies it should run on the latest version of Ubuntu.
+environment ensures this job uses the created 'production' environment (this is a Prerequisite when using the federated identity credentials). Grants the necessary permissions for the job to update the id-token. This is neccessary for using federated credentials after the Azure login.
+
+####% Steps
+
+#####% 1. Checkout the Repository
+
+```yaml
+- name: Checkout repository
+  uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+```
+
+Checks out the repository to the job runner. Allowing the runner to access the repository content.
+
+###### 2. Get Owner/Repo Name and Convert to Lowercase
+
+```yaml
+- name: Get owner/repo name and convert to lowercase
+  id: get-image-name
+  run: echo "image-name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+```
+
+Retrieves the repository name and converts it to lowercase for use as the Docker image name (lowercase name is required). You can easily use an env variable for your image name. This just allows it to be automated.
+
+###### 3. Extract tag version
+
+```yaml
+- name: Extract image tag
+  id: extract-tag
+  run: |
+    if [[ $GITHUB_REF == refs/tags/* ]]; then
+      TAG=${GITHUB_REF#refs/tags/}
+    else
+      TAG=$(git describe --tags --abbrev=0)
+    fi
+    echo "tag=$TAG" >> $GITHUB_OUTPUT
+```
+
+Since the Azure Web Application is running our published image in ghcr.io, retrieving the tag is neccessary inorder to run the lastest version by setting docker_image_name. The alternative to this is to ignore image tag changes and use a separate deploy task to update the image version in the web app.
+
+###### 4. Azure login
+
+```yaml
+- name: Azure login
+  uses: azure/login@v2
+  with:
+    client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+```
+
+This task logins into Azure using the federated identity credentials. Once authenticated the following Terraform tasks will be able to perform actions against the subscription.
+
+###### 5. Terraform set
+
+```yaml
+- name: Setup Terraform
+  uses: hashicorp/setup-terraform@v3
+  with:
+    terraform_version: 1.8.4
+```
+
+This is used to set up Terraform CLI in a GitHub Actions workflow, allowing you to run Terraform commands within the workflow.
+
+###### 6. Terraform init
+
+```yaml
+- name: Terraform Init
+  id: init
+  working-directory: ${{ env.WORKING_DIRECTORY }}
+  env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    ARM_USE_OIDC: true
+  run: terraform init
+```
+
+Terraform init initializes a Terraform working directory by downloading and installing the necessary provider plugins and setting up the backend configuration for the project. The working directory using the env value which is set to 'infra' and ARM_USE_OIDC set to true is to indicate that we are using Azure federated identity credentials.
+
+###### 7. Terraform Validate
+
+```yaml
+- name: Terraform Validate
+  id: validate
+  working-directory: ${{ env.WORKING_DIRECTORY }}
+  run: terraform validate -no-color
+```
+
+###### 8. Terraform Plan
+
+```yaml
+- name: Terraform Plan
+  id: plan
+  env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    ARM_USE_OIDC: true
+    TF_VAR_docker_image_name: '${{ steps.get-image-name.outputs.image-name }}:${{ steps.extract-tag.outputs.tag }}'
+  working-directory: ${{ env.WORKING_DIRECTORY }}
+  run: terraform plan -no-color
+  continue-on-error: false
+```
+
+###### 9. Terraform Apply
+
+```yaml
+- name: Terraform Apply (auto-approve)
+  working-directory: ${{ env.WORKING_DIRECTORY }}
+  env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    ARM_USE_OIDC: true
+    TF_VAR_docker_image_name: '${{ steps.get-image-name.outputs.image-name }}:${{ steps.extract-tag.outputs.tag }}'
+  run: terraform apply -auto-approve
+```
+
+############################## END
 
 ### Completed Destroy Workflow
 
