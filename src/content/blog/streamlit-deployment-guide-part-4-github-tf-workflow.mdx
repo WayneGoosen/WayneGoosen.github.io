@@ -39,9 +39,9 @@ A basic understanding of GitHub Actions is required and the Workflow assumes you
 
 If you have your own Terraform configuration, ensure all the dependent files are available and are stored within /infra folder for this Workflows to function correctly.
 
-## Create a GitHub Workflow
+## Create GitHub Workflows
 
-The Workflow file should be stored within the following folder: `.github/workflows/`. A concise name could be `docker-image-build-and-push.yaml`.
+The Workflow file should be stored within the following folder: `.github/workflows/`. A concise name could be `terraform-plan-apply.yaml` and `terraform-destroy.yaml`.
 
 ### Setup Azure Application Registration
 
@@ -60,7 +60,7 @@ Adding Secrets:
 1. Navigate to the your repository on GitHub.
 2. Go to “Settings” > “Environments” > Select “production”.
 3. Go to "Environment secrets" and select "Add environment secret"
-4. Add the following secrets using the output of step 4: AZURE_ENTRA_ID_CLIENT_ID, AZURE_ENTRA_ID_TENANT_ID & AZURE_SUBSCRIPTION_ID
+4. Add the following secrets using the output of [Setup Azure Application Registration](#setup-azure-application-registration): AZURE_ENTRA_ID_CLIENT_ID, AZURE_ENTRA_ID_TENANT_ID & AZURE_SUBSCRIPTION_ID
 
 These will be used as environment variables provided to the terraform actions.
 
@@ -164,9 +164,9 @@ jobs:
         run: terraform apply -auto-approve
 ```
 
-#### Workflow Walkthrough
+### Apply Workflow Walkthrough
 
-##### Workflow Definition
+#### Workflow Definition
 
 ```yaml
 name: Terraform Plan & Apply Infrastructure
@@ -174,7 +174,7 @@ name: Terraform Plan & Apply Infrastructure
 
 The name of the workflow which is shown under the Actions tab. This allows you to set a readable name for your Workflow, if omitted the file name will be shown.
 
-##### Triggers
+#### Triggers
 
 ```yaml
 on:
@@ -188,6 +188,16 @@ on:
 ```
 
 The workflow triggers on pushes to the "main" branch and only if the changes are made in the 'infra' directory. The 'workflow_dispatch' allows the workflow to be triggered manually. Additionally there is a trigger for any tags created on the repository.
+
+#### Environment
+
+```yaml
+env:
+  TF_VAR_resource_group_name: 'rg-streamlit-poc'
+  WORKING_DIRECTORY: './infra'
+```
+
+This sets two environment variables available to the entire workflow. Working directory is set to where our Terraform source resides (i.e infra) and TF_VAR_resource_group_name allows you to set the resource group used to provision resources within.
 
 #### Jobs
 
@@ -203,9 +213,9 @@ jobs:
 There is a single job defined which covers the full behavior to run the Terraform commands. 'runs-on' specifies it should run on the latest version of Ubuntu.
 environment ensures this job uses the created 'production' environment (this is a Prerequisite when using the federated identity credentials). Grants the necessary permissions for the job to update the id-token. This is neccessary for using federated credentials after the Azure login.
 
-####% Steps
+#### Steps
 
-#####% 1. Checkout the Repository
+##### 1. Checkout the Repository
 
 ```yaml
 - name: Checkout repository
@@ -216,7 +226,7 @@ environment ensures this job uses the created 'production' environment (this is 
 
 Checks out the repository to the job runner. Allowing the runner to access the repository content.
 
-###### 2. Get Owner/Repo Name and Convert to Lowercase
+##### 2. Get Owner/Repo Name and Convert to Lowercase
 
 ```yaml
 - name: Get owner/repo name and convert to lowercase
@@ -226,7 +236,7 @@ Checks out the repository to the job runner. Allowing the runner to access the r
 
 Retrieves the repository name and converts it to lowercase for use as the Docker image name (lowercase name is required). You can easily use an env variable for your image name. This just allows it to be automated.
 
-###### 3. Extract tag version
+##### 3. Extract tag version
 
 ```yaml
 - name: Extract image tag
@@ -242,7 +252,7 @@ Retrieves the repository name and converts it to lowercase for use as the Docker
 
 Since the Azure Web Application is running our published image in ghcr.io, retrieving the tag is neccessary inorder to run the lastest version by setting docker_image_name. The alternative to this is to ignore image tag changes and use a separate deploy task to update the image version in the web app.
 
-###### 4. Azure login
+##### 4. Azure login
 
 ```yaml
 - name: Azure login
@@ -255,7 +265,7 @@ Since the Azure Web Application is running our published image in ghcr.io, retri
 
 This task logins into Azure using the federated identity credentials. Once authenticated the following Terraform tasks will be able to perform actions against the subscription.
 
-###### 5. Terraform set
+##### 5. Terraform set
 
 ```yaml
 - name: Setup Terraform
@@ -266,7 +276,7 @@ This task logins into Azure using the federated identity credentials. Once authe
 
 This is used to set up Terraform CLI in a GitHub Actions workflow, allowing you to run Terraform commands within the workflow.
 
-###### 6. Terraform init
+##### 6. Terraform init
 
 ```yaml
 - name: Terraform Init
@@ -280,9 +290,9 @@ This is used to set up Terraform CLI in a GitHub Actions workflow, allowing you 
   run: terraform init
 ```
 
-Terraform init initializes a Terraform working directory by downloading and installing the necessary provider plugins and setting up the backend configuration for the project. The working directory using the env value which is set to 'infra' and ARM_USE_OIDC set to true is to indicate that we are using Azure federated identity credentials.
+Terraform init initializes a Terraform working directory by downloading and installing the necessary provider plugins and setting up the backend configuration for the project. The working directory is set to the env value which is set to 'infra' and this is configured for all Terraform actions. The ARM_USE_OIDC is set to true is to indicate that we are using Azure federated identity credentials and this is configured for all Terraform actions.
 
-###### 7. Terraform Validate
+##### 7. Terraform Validate
 
 ```yaml
 - name: Terraform Validate
@@ -291,7 +301,9 @@ Terraform init initializes a Terraform working directory by downloading and inst
   run: terraform validate -no-color
 ```
 
-###### 8. Terraform Plan
+Terraform validate checks the syntax and internal consistency of a Terraform configuration, ensuring that it is syntactically valid and internally consistent.
+
+##### 8. Terraform Plan
 
 ```yaml
 - name: Terraform Plan
@@ -307,7 +319,9 @@ Terraform init initializes a Terraform working directory by downloading and inst
   continue-on-error: false
 ```
 
-###### 9. Terraform Apply
+Terraform plan is a command that previews the changes that Terraform will make to your infrastructure, showing the execution plan before applying any modifications. The new Terraform variable is TF_VAR_docker_image_name which will set the image and tag for the published containerized Streamlit application.
+
+##### 9. Terraform Apply
 
 ```yaml
 - name: Terraform Apply (auto-approve)
@@ -321,7 +335,7 @@ Terraform init initializes a Terraform working directory by downloading and inst
   run: terraform apply -auto-approve
 ```
 
-############################## END
+Terraform apply is a command that executes the actions defined in a Terraform configuration file to create, update, or delete infrastructure resources. The apply has -auto-approve set which will not prompt confirmation (this is for proof of concepts and if using for production, rather introduce approval step).
 
 ### Completed Destroy Workflow
 
@@ -331,7 +345,6 @@ name: Terraform Destroy Inrastructure
 on: workflow_dispatch
 
 env:
-  TF_VAR_docker_image_name: 'waynegoosen/azure-streamlit-poc:0.1.2'
   TF_VAR_resource_group_name: 'rg-streamlit-poc'
   WORKING_DIRECTORY: './infra'
 
@@ -379,3 +392,33 @@ jobs:
           ARM_USE_OIDC: true
         run: terraform destroy -auto-approve
 ```
+
+### Destroy Workflow Walkthrough
+
+For brevity I will only go through differences, otherwise for the same actions please refer to the Apply workflow.
+
+#### Triggers
+
+```yaml
+on: workflow_dispatch
+```
+
+The workflow triggers only uses 'workflow_dispatch' to allow the workflow to be triggered manually.
+
+#### Steps
+
+##### 1. Terraform Destroy
+
+```yaml
+- name: Terraform Destroy (auto-approve)
+  id: destroy
+  working-directory: ${{ env.WORKING_DIRECTORY }}
+  env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    ARM_USE_OIDC: true
+  run: terraform destroy -auto-approve
+```
+
+Terraform destroy command systematically dismantles all managed infrastructure resources, reverting the environment back to its original, unprovisioned state. The destroy has -auto-approve set which will not prompt confirmation (this is for proof of concepts and if using for production, rather introduce approval step).
