@@ -10,5 +10,99 @@ tags:
   - iac
   - azurepipelines
 title: >-
-  Create boolean Terraform variables from Azure pipeline variables
+  Creating Boolean Terraform Variables from Azure Pipeline Parameters
 ---
+
+This post showcases how to allow users to set boolean parameters on a pipeline and pass them to Terraform as a boolean variable.
+
+## Terraform source
+
+This is a basic example showing a simple flag to enable/disable creation of a random_id resource. The flag is called is_create_enabled
+
+### main.tf
+
+```yaml
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.0"
+    }
+  }
+
+  required_version = ">= 1.1.0"
+}
+
+provider "random" {
+  # Configuration options
+}
+
+resource "random_id" "server" {
+  count    = var.is_create_enabled ? 1 : 0
+  byte_length = 2
+}
+```
+
+### variables.tf
+
+```yaml
+variable "is_create_enabled" {
+type = boolean
+default = false
+description = "This flag is to enable/disable creation of resources."
+}
+```
+
+# Azure Pipelines Source
+
+```yaml
+trigger: none
+
+parameters:
+  - name: isCreateEnabled
+    type: boolean
+
+stages:
+  - stage: DeployTf
+    jobs:
+      - job: deploy
+        steps:
+          - task: TerraformInstaller@1
+            displayName: 'Terraform Install'
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'global-connection'
+              backendAzureRmResourceGroupName: 'tfstate'
+              backendAzureRmStorageAccountName: 'tfstate24008'
+              backendAzureRmContainerName: 'booltest'
+              backendAzureRmKey: 'terraform.tfstate'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Validate'
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'global-connection'
+              commandOptions: '-out main.tfplan -var is_create_enabled=${{ parameters.isCreateEnabled }}'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Apply'
+            inputs:
+              command: 'apply'
+              provider: 'azurerm'
+              workingDirectory: '$(Build.SourcesDirectory)'
+              environmentServiceNameAzureRM: 'global-connection'
+              commandOptions: '-auto-approve -input=false main.tfplan'
+```
