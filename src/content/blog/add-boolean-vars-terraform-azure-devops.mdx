@@ -10,10 +10,10 @@ tags:
   - iac
   - azurepipelines
 title: >-
-  Creating Boolean Terraform Variables from Azure Pipeline Parameters
+  Creating Terraform Variables from Azure Pipeline Parameters or Variables
 ---
 
-This post showcases how to allow users to set boolean parameters on a pipeline and pass them to Terraform as a boolean variable.
+This post showcases how to allow users to set parameters or variables on a pipeline and pass them to Terraform as a variable. It showcases step by step how to achieve this starting with an initial pipeline.
 
 ## Terraform source
 
@@ -41,6 +41,8 @@ resource "random_id" "server" {
   count    = var.is_create_enabled ? 1 : 0
   byte_length = 2
 }
+
+resource "
 ```
 
 ### variables.tf
@@ -51,16 +53,22 @@ type = boolean
 default = false
 description = "This flag is to enable/disable creation of resources."
 }
+
+variable "resource_group_name" {
+type = string
+default = false
+description = "This is the name for the resource group.."
+}
 ```
 
-# Azure Pipelines Source
+# Initial Azure Pipelines Source
 
 ```yaml
 trigger: none
 
-parameters:
-  - name: isCreateEnabled
-    type: boolean
+variables:
+  - name: resourceGroupName
+    value: 'terraform'
 
 stages:
   - stage: DeployTf
@@ -106,3 +114,55 @@ stages:
               environmentServiceNameAzureRM: 'global-connection'
               commandOptions: '-auto-approve -input=false main.tfplan'
 ```
+
+## Boolean Terraform Variables
+
+Below shows the additions to the terraform source.
+
+### variables.tf
+
+```yaml
+variable "is_create_enabled" {
+type = boolean
+default = false
+description = "This flag is to enable/disable creation of resources."
+}
+```
+
+### main.tf
+
+```yaml
+parameters:
+  - name: isCreateEnabled
+    type: boolean
+    default: false
+```
+
+and
+
+```yaml
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'global-connection'
+    commandOptions: '-out main.tfplan -var is_create_enabled=${{ parameters.isCreateEnabled }}'
+```
+
+When triggering the initial pipeline manually, you will be faced with the following error:
+
+![Terraform Bool Fail Error](/src/assets/images/terraform-bool-fail.png)
+
+The error message 'a bool is required; to convert from string, use lowercase "false"' gives us a good indication on where the error comes from. Lets add a simple task to show what the string value of isCreateEnabled is :
+
+```yaml
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Boolean value is: ${{ parameters.isCreateEnabled }}"
+```
+
+The output is:
+'Boolean value is: False'
