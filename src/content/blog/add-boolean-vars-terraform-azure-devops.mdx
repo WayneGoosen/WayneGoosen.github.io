@@ -13,62 +13,60 @@ title: >-
   Creating Terraform Variables from Azure Pipeline Parameters or Variables
 ---
 
-This post showcases how to allow users to set parameters or variables on a pipeline and pass them to Terraform as a variable. It showcases step by step how to achieve this starting with an initial pipeline.
+This post showcases how to setup Azure pipeline parameters or variables on a pipeline and pass them to Terraform as variables. It covers string and boolean type parameters. Potentially there comes a use case when just one variable is needed instead of using a tfvars file.
 
-## Terraform source
+## Initial Terraform Setup
 
-This is a basic example showing a simple flag to enable/disable creation of a random_id resource. The flag is called is_create_enabled
+This is a basic example showing a simple setup with a single resource being created, an azure resource group. The resource group name is provided via a variable.
 
 ### main.tf
 
-```yaml
+```hcl
 terraform {
   required_providers {
-    random = {
-      source  = "hashicorp/random"
-      version = "~>3.0"
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.71.0"
     }
+  }
+
+  backend "azurerm" {
+      resource_group_name  = "tfstate"
+      storage_account_name = "tfstate24008"
+      container_name       = "booltest"
+      key                  = "terraform.tfstate"
   }
 
   required_version = ">= 1.1.0"
 }
 
-provider "random" {
-  # Configuration options
+provider "azurerm" {
+  features {}
 }
 
-resource "random_id" "server" {
-  count    = var.is_create_enabled ? 1 : 0
-  byte_length = 2
+resource "azurerm_resource_group" "rg_vmss" {
+  name     = var.resource_group_name
+  location = "West Europe"
 }
-
-resource "
 ```
 
 ### variables.tf
 
-```yaml
-variable "is_create_enabled" {
-type = boolean
-default = false
-description = "This flag is to enable/disable creation of resources."
-}
-
+```hcl
 variable "resource_group_name" {
-type = string
-default = false
-description = "This is the name for the resource group.."
+  type = string
+  description = "This is the name for the resource group containing all resources created."
 }
 ```
 
-# Initial Azure Pipelines Source
+## Initial Azure Pipelines Setup
 
 ```yaml
 trigger: none
 
-variables:
+parameters:
   - name: resourceGroupName
-    value: 'terraform'
+    type: string
 
 stages:
   - stage: DeployTf
@@ -103,7 +101,7 @@ stages:
               provider: 'azurerm'
               command: 'plan'
               environmentServiceNameAzureRM: 'global-connection'
-              commandOptions: '-out main.tfplan -var is_create_enabled=${{ parameters.isCreateEnabled }}'
+              commandOptions: '-out main.tfplan -var resource_group_name=${{ parameters.resourceGroupName }}'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Apply'
@@ -115,46 +113,89 @@ stages:
               commandOptions: '-auto-approve -input=false main.tfplan'
 ```
 
-## Boolean Terraform Variables
+## Using Azure pipeline parameters
 
-Below shows the additions to the terraform source.
+As you can see there is a pipeline parameter declared as so:
+
+```yaml
+parameters:
+  - name: resourceGroupName
+    type: string
+```
+
+As there is no default, it is a required parameter:
+![Pipeline run](/src/assets/images/pipeline-run.png)
+
+In the plan, this commandOptions snippet using '-var' is used to pass the Azure pipelines parameter to Terraform:
+
+```yaml
+-var resource_group_name=${{ parameters.resourceGroupName }}
+```
+
+## Using Azure pipeline Variables
+
+Adjusting existing pipeline to define a variable:
+
+```yaml
+variables:
+  - name: resourceGroupName
+    value: 'test'
+```
+
+The usage just needs an adjustment in syntax for using vatiables:
+
+```yaml
+-var resource_group_name=$(resourceGroupName)
+```
+
+## Gotcha Using Boolean Type
+
+For any use case that would need a boolean pipeline parameter to be pass to a Terraform as a variable there is a gotcha. Lets see this with some minor additions to the existing code:
 
 ### variables.tf
 
-```yaml
+```hcl
 variable "is_create_enabled" {
-type = boolean
-default = false
-description = "This flag is to enable/disable creation of resources."
+  type = boolean
+  default = false
+  description = "This flag is to enable/disable creation of resources."
 }
 ```
 
 ### main.tf
 
+```hcl
+resource "azurerm_resource_group" "rg_vmss" {
+  count   = var.is_created_enabled ? 1 : 0
+  name     = var.resource_group_name
+  location = "West Europe"
+}
+```
+
+### Pipeline
+
+Add a boolean parameter:
+
 ```yaml
 parameters:
-  - name: isCreateEnabled
+  - name: is_create_enabled
+    displayName: 'Is Create Enabled'
     type: boolean
-    default: false
 ```
 
-and
+Pass this parameter to Terraform using -var:
 
 ```yaml
-- task: TerraformTaskV4@4
-  displayName: 'Terraform Plan'
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'global-connection'
-    commandOptions: '-out main.tfplan -var is_create_enabled=${{ parameters.isCreateEnabled }}'
+-var is_create_enabled=${{ parameters.isCreateEnabled }}'
 ```
 
-When triggering the initial pipeline manually, you will be faced with the following error:
+### Gotcha
+
+When triggering the updated pipeline manually, you will be faced with the following error:
 
 ![Terraform Bool Fail Error](/src/assets/images/terraform-bool-fail.png)
 
-The error message 'a bool is required; to convert from string, use lowercase "false"' gives us a good indication on where the error comes from. Lets add a simple task to show what the string value of isCreateEnabled is :
+The error message **a bool is required; to convert from string, use lowercase "false"** gives us a good indication on where the error comes from. Lets add a simple task to show what the string value of isCreateEnabled is :
 
 ```yaml
 - task: Bash@3
@@ -165,4 +206,10 @@ The error message 'a bool is required; to convert from string, use lowercase "fa
 ```
 
 The output is:
-'Boolean value is: False'
+**Boolean value is: False**
+
+There is a simple fix for this, using the built-in lower function, like so:
+
+```yaml
+-var is_create_enabled=${{ lower(parameters.isCreateEnabled) }}
+```
