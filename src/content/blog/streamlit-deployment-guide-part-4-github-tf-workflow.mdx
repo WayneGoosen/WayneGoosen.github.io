@@ -2,9 +2,9 @@
 heroImage: /src/assets/images/tfgithubactions.png
 category: CICD
 description: >-
-  A step-by-step guide to configuring a GitHub Workflow that executes Terraform commands to provision Infrastructure on Azure.
-pubDate: 2024-07-16
-draft: true
+  A step-by-step guide to configuring a GitHub Workflow that executes Terraform actions to provision and tear down Infrastructure on Azure.
+pubDate: 2024-07-31
+draft: false
 tags:
   - terraform
   - azure
@@ -25,7 +25,7 @@ Do you want to deploy your Streamlit application on Azure right now? Use the [te
 
 ## TL;DR
 
-See the [completed GitHub Workflow](#completed-workflow).
+See the completed [Apply Workflow](#completed-apply-workflow) and [Destroy Workflow](#completed-destroy-workflow).
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ The workflow files should be stored within the following folder: `.github/workfl
 
 ### Setup Azure Application Registration
 
-Refer to [Azure Federated Identity Credentials for Terraform: A GitHub Actions Guide](https://blog.waynegoosen.com/post/fed-creds-tf-github-actions/).
+Refer to [Azure Federated Identity Credentials for Terraform: A GitHub Actions Guide](https://blog.waynegoosen.com/post/fed-creds-tf-github-actions/) to enable authenticating the workflow with Azure.
 
 ### Setup Environment
 
@@ -262,7 +262,7 @@ Since the Azure Web Application is running our published image in ghcr.io, retri
     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 ```
 
-This task logins into Azure using the federated identity credentials. Once authenticated the following Terraform tasks will be able to perform actions against the subscription.
+This task logs into Azure using the federated identity credentials. Once authenticated, the following Terraform tasks will be able to perform actions against the subscription.
 
 ##### 5. Terraform Setup
 
@@ -273,7 +273,7 @@ This task logins into Azure using the federated identity credentials. Once authe
     terraform_version: 1.8.4
 ```
 
-This is used to set up Terraform CLI in a GitHub Actions workflow, allowing you to run Terraform commands within the workflow.
+This sets up Terraform CLI in a GitHub Actions workflow, allowing you to run Terraform commands within the workflow.
 
 ##### 6. Terraform Init
 
@@ -289,7 +289,7 @@ This is used to set up Terraform CLI in a GitHub Actions workflow, allowing you 
   run: terraform init
 ```
 
-Terraform init initializes a Terraform working directory by downloading and installing the necessary provider plugins and setting up the backend configuration for the project. The working directory is set to the env value which is set to 'infra' and this is configured for all Terraform actions. The ARM_USE_OIDC is set to true is to indicate that we are using Azure federated identity credentials and this is configured for all Terraform actions.
+Terraform init initializes a Terraform working directory by downloading and installing the necessary provider plugins and setting up the backend configuration for the project. The working directory is set to the env value which is set to ‘infra’ and this is configured for all Terraform actions. The ARM_USE_OIDC is set to true to indicate that we are using Azure federated identity credentials and this is configured for all Terraform actions.
 
 ##### 7. Terraform Validate
 
@@ -318,7 +318,7 @@ Terraform validate checks the syntax and internal consistency of a Terraform con
   continue-on-error: false
 ```
 
-Terraform plan is a command that previews the changes that Terraform will make to your infrastructure, showing the execution plan before applying any modifications. The new Terraform variable is TF_VAR_docker_image_name which will set the image and tag for the published containerized Streamlit application.
+Terraform plan is a command that previews the changes that Terraform will make to your infrastructure, showing the execution plan before applying any modifications. The new Terraform variable is TF_VAR_docker_image_name, which will set the image and tag for the published containerized Streamlit application and is set on Terraform plan/apply actions.
 
 ##### 9. Terraform Apply
 
@@ -394,7 +394,7 @@ jobs:
 
 ### Destroy Workflow Walkthrough
 
-For brevity I will only go through differences, otherwise for the same actions please refer to the Apply workflow.
+For brevity, I will only go through the differences. Otherwise, for the same actions, please refer to the Apply workflow.
 
 #### Triggers
 
@@ -421,3 +421,11 @@ The workflow triggers only uses 'workflow_dispatch' to allow the workflow to be 
 ```
 
 Terraform destroy command systematically dismantles all managed infrastructure resources, reverting the environment back to its original, unprovisioned state. The destroy has -auto-approve set which will not prompt confirmation (this is for proof of concepts and if using for production, rather introduce approval step).
+
+## Wrap Up
+
+This is an initial starting point for managed the proof of concept infrastructure. When tackling production workloads, the workflows would be more mature and could include, but not be limited to, the following items:
+
+- Terraform Apply Approval: Validate plan before applying
+- Pull Request Workflow: Ensure changes are validated, scanned, and tested
+- Multi-environment support (i.e., integration, staging, and production)
