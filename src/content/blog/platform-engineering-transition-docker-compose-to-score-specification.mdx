@@ -12,15 +12,118 @@ title: >-
   From Docker Compose to Score Specification: A Platform Engineering Guide
 ---
 
+Welcome! So, you’ve been noticing Platform Engineering everywhere, along with terminology like Internal Developer Platform, Internal Developer Portal (IDP) and the idea of graph based backend instead of pipelines. It’s like discovering design patterns for the first time or spotting a new frontend framework — you can’t wait to implement at the first opportunity. But where should you start?
+
+Let's set some base context about your current environment:
+
+- All applications are containerized and deployed to a Kubernetes cluster.
+- Developers are currently using Docker Compose or Helm (with some intercept technology) to develop locally. Some requiring a container registry and others building all the required images locally.
+- Applications are deployed via pipelines or GitOps approach.
+- Infrastructure is managed via Terraform.
+
+For the most part everything is there but you are still far away from providing self service and an amazing developer experience (DevEx).
+
+I decided one of the first places to dive into was the Score specification to standardise a specification for developers to use while allowing it to be platform agnostic.
+
 This post shows how you can transition from using Docker Compose to the Score Specification. Once transitioned, you can use score to generate a deployment mode in Docker Compose or any other supported deploy mode.
 
 # What is Score?
 
-# What is the use case?
+Score is a developer-centric and platform-agnostic workload specification. It ensures consistent configuration between local and remote environments. In Score you define workloads (i.e. a single score file) and you can map this concept to that of a Pod in Kubernetes. See [Score.dev](https://score.dev/)
 
-# Initial Docker Compose Setup
+# Our Example application
+
+The application we will use is a standard, box - box - cylinder... Frontend, Backend and Database. The technology used is NextJs, .NET and Microsoft SQL Server. See this repository for the [source](). This is not production ready source - it is only a sample for this demo of score.
+
+# Docker Compose File
+
+The docker compose file is quite simple for the three components, though I would highlight these aspects of it:
+
+- Build is used as this is for local development. The images can be rebuilt after any changes and there is no reliance needed on a container registry.
+- Ports exposed to the host as developers might want to connect to the database to debug issues as an example.
+
+```yaml
+name: manually-created
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: UAT
+    depends_on:
+      - db
+    ports:
+      - target: 8080
+        published: '8082'
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      ENVIRONMENT: UAT
+    depends_on:
+      - backend
+    ports:
+      - target: 3000
+        published: '3233'
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    env_file:
+      - ./backend/.env
+    ports:
+      - target: 1433
+        published: '1433'
+```
 
 # Defining the Score Specification
+
+From our application we decide to have the following files:
+
+- score-frontend.yaml
+- score-backend.yaml
+
+score-frontend.yaml:
+
+```yaml
+apiVersion: score.dev/v1b1
+
+metadata:
+  name: frontend
+
+service:
+  ports:
+    frontend:
+      port: 3233
+      targetPort: 3000
+
+containers:
+  frontend:
+    image: ./frontend
+    variables:
+      ENVIRONMENT: UAT
+```
+
+score-backend.yaml
+
+```yaml
+apiVersion: score.dev/v1b1
+
+metadata:
+  name: backend
+
+service:
+  ports:
+    backend:
+      port: 8082
+      targetPort: 8080
+
+containers:
+  backend:
+    image: ./backend
+    variables:
+      ASPNETCORE_ENVIRONMENT: UAT
+```
 
 # Deploying
 
