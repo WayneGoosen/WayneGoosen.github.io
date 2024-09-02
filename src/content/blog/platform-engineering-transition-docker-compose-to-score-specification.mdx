@@ -31,6 +31,8 @@ This post shows how you can transition from using Docker Compose to the Score Sp
 
 Score is a developer-centric and platform-agnostic workload specification. It ensures consistent configuration between local and remote environments. In Score you define workloads (i.e. a single score file) and you can map this concept to that of a Pod in Kubernetes. See [Score.dev](https://score.dev/)
 
+Score has different implementations and since we are targeting Docker Compose, the relevant implementation is [score-compose](https://docs.score.dev/docs/score-implementation/score-compose/).
+
 # Our Example application
 
 The application we will use is a standard, box - box - cylinder... Frontend, Backend and Database. The technology used is NextJs, .NET and Microsoft SQL Server. See this repository for the [source](). This is not production ready source - it is only a sample for this demo of score.
@@ -82,6 +84,7 @@ From our application we decide to have the following files:
 
 - score-frontend.yaml
 - score-backend.yaml
+- score-database.yaml
 
 score-frontend.yaml:
 
@@ -124,6 +127,41 @@ containers:
     variables:
       ASPNETCORE_ENVIRONMENT: UAT
 ```
+
+## Generating a compose file with score-compose
+
+To get started, initialize score-compose:
+
+```bash
+score-compose init --no-sample
+```
+
+The flag '--no-sample' ensures init does not create a default score.yaml file as we have our files defined already.
+
+Run generate on for each workload:
+
+```bash
+score-compose generate score-frontend.yaml --build=frontend=./aspnetcore -o score-compose.yaml
+score-compose generate score-backend.yaml --build=backend=./backend -o score-compose.yaml
+score-compose generate score-database.yaml -o score-compose.yaml
+```
+
+Important to note here, is generate is accummaltive, so any additional runs will just add to the current state.
+
+Parameters dive in:
+
+- '--build' : Specifies an optional build context to use for the given container. The format is either --build=container=./dir or --build=container={'"context":"./dir"}.
+- '-o' : Specifies the output file to write the composed Docker Compose file to. By default, the output file is named compose.yaml.
+
+We run one last generate to expose ports to the host:
+
+```bash
+score-compose generate score-frontend.yaml --publish 8002:backend:8002 --publish 5348:frontend:5348 --publish 1433:database:1433 -o score-compose.yaml
+```
+
+Parameters dive in:
+
+- '--publish' : Normally, the ports exposed by a workload, including the service ports are not accessible on the docker host. However the --publish flag exists to allow this. The flag can take the form HOST_PORT:<workload name>:CONTAINER_PORT, where the container port can be any port on the container you wish to map to the host. This skips any service port mappings.
 
 # Deploying
 
