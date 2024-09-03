@@ -146,23 +146,71 @@ score-compose generate score-backend.yaml --build=backend=./backend -o score-com
 score-compose generate score-database.yaml -o score-compose.yaml
 ```
 
-Important to note here, is generate is accummaltive, so any additional runs will just add to the current state.
+Important to note here, is that generate is accumulative, so any additional runs will just add to the current generated state. The reason for multiple generates is currently the --build parameter is yet to support workload context (it is coming soon though).
 
 Parameters dive in:
 
-- '--build' : Specifies an optional build context to use for the given container. The format is either --build=container=./dir or --build=container={'"context":"./dir"}.
+- '--build' : Specifies an optional build context to use for the given container. The format is either --build=container=./dir or --build=container={'"context":"./dir"}. This is an important one for development as it allows the image to be built when running docker compose up, unlike the database where we are using an existing image.
 - '-o' : Specifies the output file to write the composed Docker Compose file to. By default, the output file is named compose.yaml.
 
 We run one last generate to expose ports to the host:
 
 ```bash
-score-compose generate score-frontend.yaml --publish 8002:backend:8002 --publish 5348:frontend:5348 --publish 1433:database:1433 -o score-compose.yaml
+score-compose generate score-database.yaml --publish 8002:backend:8002 --publish 5348:frontend:5348 --publish 1433:database:1433 -o score-compose.yaml
 ```
 
 Parameters dive in:
 
-- '--publish' : Normally, the ports exposed by a workload, including the service ports are not accessible on the docker host. However the --publish flag exists to allow this. The flag can take the form HOST_PORT:<workload name>:CONTAINER_PORT, where the container port can be any port on the container you wish to map to the host. This skips any service port mappings.
+- '--publish' : The ports defined are no reacheable on the docker host. To allow this the --publish flag enables this using the form HOST_PORT:<workload name>:CONTAINER_PORT. The container port is any port you want to map to the host.
 
-# Deploying
+# Generated Docker-Compose file
+
+The resultant file looks mostly like the one that was manually created:
+
+```yaml
+name: src
+services:
+  backend-backend:
+    annotations:
+      compose.score.dev/workload-name: backend
+    build:
+      context: ./backend
+    environment:
+      ENVIRONMENT: UAT
+    hostname: backend
+    ports:
+      - target: 8002
+        published: '8002'
+  database-database:
+    annotations:
+      compose.score.dev/workload-name: database
+    environment:
+      ENVIRONMENT: UAT
+    hostname: database
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - target: 1433
+        published: '1433'
+  frontend-frontend:
+    annotations:
+      compose.score.dev/workload-name: frontend
+    environment:
+      ENVIRONMENT: UAT
+    hostname: frontend
+    image: ./frontend
+    ports:
+      - target: 5348
+        published: '5348'
+```
+
+The naming convention with the services is 'workloadName-containerName' so you could adjust it if you dont like this convention.
+
+# Test Drive
+
+To get up and running, we execute docker-compose up specifying our generated file:
+
+```bash
+docker-compose -f score-compose.yaml up
+```
 
 # What's next?
