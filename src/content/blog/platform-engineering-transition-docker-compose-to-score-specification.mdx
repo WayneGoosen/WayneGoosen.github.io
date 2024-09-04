@@ -1,13 +1,15 @@
 ---
 heroImage: /src/assets/images/Terraform.png
-category: 'DevOps'
+category: 'Platform Engineering'
 description: >-
   A comprehensive guide for platform engineers on how to transition from using Docker Compose to Score Specification.
-pubDate: 2024-07-14
+pubDate: 2024-09-04
 draft: true
 tags:
   - devops
   - platformengineering
+  - score
+  - dockercompose
 title: >-
   From Docker Compose to Score Specification: A Platform Engineering Guide
 ---
@@ -136,7 +138,7 @@ To get started, initialize score-compose:
 score-compose init --no-sample
 ```
 
-The flag '--no-sample' ensures init does not create a default score.yaml file as we have our files defined already.
+The flag '--no-sample' ensures init does not create a default score.yaml file as we have our files defined already
 
 Run generate on for each workload:
 
@@ -147,10 +149,9 @@ score-compose generate score-database.yaml -o score-compose.yaml
 ```
 
 Important to note here, is that generate is accumulative, so any additional runs will just add to the current generated state. The reason for multiple generates is currently the --build parameter is yet to support workload context (it is coming soon though).
-
 Parameters dive in:
 
-- '--build' : Specifies an optional build context to use for the given container. The format is either --build=container=./dir or --build=container={'"context":"./dir"}. This is an important one for development as it allows the image to be built when running docker compose up, unlike the database where we are using an existing image.
+- '--build' : Specifies an optional build context to use for the given container. The format is either --build=container=./dir or --build=container=\{'"context":"./dir"\}. This is an important one for development as it allows the image to be built when running docker compose up, unlike the database where we are using an existing image.
 - '-o' : Specifies the output file to write the composed Docker Compose file to. By default, the output file is named compose.yaml.
 
 We run one last generate to expose ports to the host:
@@ -161,7 +162,7 @@ score-compose generate score-database.yaml --publish 8002:backend:8002 --publish
 
 Parameters dive in:
 
-- '--publish' : The ports defined are no reacheable on the docker host. To allow this the --publish flag enables this using the form HOST_PORT:<workload name>:CONTAINER_PORT. The container port is any port you want to map to the host.
+- '--publish' : The ports defined are no reacheable on the docker host. To allow this the --publish flag enables this using the form HOST_PORT:\<workload name\>:CONTAINER_PORT. The container port is any port you want to map to the host.
 
 # Generated Docker-Compose file
 
@@ -213,4 +214,4 @@ To get up and running, we execute docker-compose up specifying our generated fil
 docker-compose -f score-compose.yaml up
 ```
 
-# What's next?
+# Conclusion
