@@ -14,9 +14,9 @@ title: >-
   From Docker Compose to Score Specification: A Platform Engineering Guide
 ---
 
-Welcome! So, you’ve been noticing Platform Engineering everywhere, along with terminology like Internal Developer Platform, Internal Developer Portal (IDP) and the idea of graph based backend instead of pipelines. It’s like discovering design patterns for the first time or spotting a new frontend framework — you can’t wait to implement at the first opportunity. But where should you start?
+Welcome! So, you’ve been noticing Platform Engineering everywhere, along with terminology like Internal Developer Platform, Internal Developer Portal (IDP) and the idea of graph based backend instead of pipelines. It’s like discovering design patterns for the first time or hearing about a new frontend framework — you can’t wait to implement at the first opportunity. But where should you start?
 
-Let's set some base context about your current environment:
+Let's set some base context about the background I am coming from:
 
 - All applications are containerized and deployed to a Kubernetes cluster.
 - Developers are currently using Docker Compose or Helm (with some intercept technology) to develop locally. Some requiring a container registry and others building all the required images locally.
@@ -25,21 +25,23 @@ Let's set some base context about your current environment:
 
 For the most part everything is there but you are still far away from providing self service and an amazing developer experience (DevEx).
 
-I decided one of the first places to dive into was the Score specification to standardise a specification for developers to use while allowing it to be platform agnostic.
+I decided one of the first places to dive into was the Score specification to standardise a specification for developers to use while allowing it to be platform agnostic (it can be deployed anywhere).
 
 This post shows how you can transition from using Docker Compose to the Score Specification. Once transitioned, you can use score to generate a deployment mode in Docker Compose or any other supported deploy mode.
 
 # What is Score?
 
-Score is a developer-centric and platform-agnostic workload specification. It ensures consistent configuration between local and remote environments. In Score you define workloads (i.e. a single score file) and you can map this concept to that of a Pod in Kubernetes. See [Score.dev](https://score.dev/)
+[Score](https://score.dev/) is a developer-focused, platform-independent specification (YAML file) for managing workloads. It helps maintain consistent configuration across both local and remote environments. In Score you define workloads (you can map this workload concept to that of a Pod in Kubernetes) and other top-level reference definitions like containers, service and resources.
 
-Score has different implementations and since we are targeting Docker Compose, the relevant implementation is [score-compose](https://docs.score.dev/docs/score-implementation/score-compose/).
+Score has different implementations (CLI's), i.e. what platform specific configuration files can be generated, like Kubernetes, Docker Compose etc. You could define a Score file and then decide what platform you want to run it on. Since we are targeting Docker Compose, the relevant implementation is [score-compose](https://docs.score.dev/docs/score-implementation/score-compose/).
+
+The [score documentation site](https://docs.score.dev/docs/) does a great job at explaining everything so please head there for a deep dive.
 
 # Our Example application
 
 The application we will use is a standard, box - box - cylinder... Frontend, Backend and Database. The technology used is NextJs, .NET and Microsoft SQL Server. See this repository for the [source](). This is not production ready source - it is only a sample for this demo of score.
 
-# Docker Compose File
+## Docker Compose File
 
 The docker compose file is quite simple for the three components, though I would highlight these aspects of it:
 
@@ -82,13 +84,13 @@ services:
 
 # Defining the Score Specification
 
-From our application we decide to have the following files:
+From our application we decide to have the following files defining our workloads:
 
 - score-frontend.yaml
 - score-backend.yaml
 - score-database.yaml
 
-score-frontend.yaml:
+## Score Frontend File
 
 ```yaml
 apiVersion: score.dev/v1b1
@@ -109,7 +111,7 @@ containers:
       ENVIRONMENT: UAT
 ```
 
-score-backend.yaml
+## Score Backend File
 
 ```yaml
 apiVersion: score.dev/v1b1
@@ -130,15 +132,42 @@ containers:
       ASPNETCORE_ENVIRONMENT: UAT
 ```
 
-## Generating a compose file with score-compose
+## Score Database File
 
-To get started, initialize score-compose:
+```yaml
+apiVersion: score.dev/v1b1
+
+metadata:
+  name: database
+
+service:
+  ports:
+    database:
+      port: 1433
+      targetPort: 1433
+
+containers:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    variables:
+      ENVIRONMENT: UAT
+```
+
+# Generate Docker Compose file with score-compose
+
+You would need to follow the [instructions](https://docs.score.dev/docs/score-implementation/score-compose/#installation) to install score-compose first and assuming necessary Docker is installed.
+
+## Initialize
+
+Once installed, initialize score-compose:
 
 ```bash
 score-compose init --no-sample
 ```
 
-The flag '--no-sample' ensures init does not create a default score.yaml file as we have our files defined already
+The flag '--no-sample' ensures init does not create a default score.yaml file as we have our files defined already.
+
+## Generate
 
 Run generate on for each workload:
 
@@ -164,7 +193,7 @@ Parameters dive in:
 
 - '--publish' : The ports defined are no reacheable on the docker host. To allow this the --publish flag enables this using the form HOST_PORT:\<workload name\>:CONTAINER_PORT. The container port is any port you want to map to the host.
 
-# Generated Docker-Compose file
+## Generated Docker-Compose file
 
 The resultant file looks mostly like the one that was manually created:
 
@@ -206,7 +235,7 @@ services:
 
 The naming convention with the services is 'workloadName-containerName' so you could adjust it if you dont like this convention.
 
-# Test Drive
+# Docker-compose up
 
 To get up and running, we execute docker-compose up specifying our generated file:
 
@@ -214,4 +243,8 @@ To get up and running, we execute docker-compose up specifying our generated fil
 docker-compose -f score-compose.yaml up
 ```
 
+You should have your application running as before. The only aspect I havent dug into is the depends property.
+
 # Conclusion
+
+# What's Next?
