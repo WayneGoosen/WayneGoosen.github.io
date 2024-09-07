@@ -7,7 +7,7 @@ import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://waynegoosen.github.io/',
+  site: 'https://blog.waynegoosen.com/',
   // Write here your website url
   markdown: {
     remarkPlugins: [remarkReadingTime],
