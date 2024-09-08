@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blog.waynegoosen.com/sitemap-index.xml
+Sitemap: https://waynegoosen.com/sitemap-index.xml
