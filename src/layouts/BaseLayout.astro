@@ -36,5 +36,17 @@ const { title, description, image, articleDate } = Astro.props
 				margin-left: calc(100vw - 100%); /* prevent layout shift */
 			}
 		</style>
+		<script>
+			window.embeddedChatbotConfig = {
+				chatbotId: 'kIjPNUQCBNQTNMUt1ldgG',
+				domain: 'www.chatbase.co'
+			}
+		</script>
+		<script
+			src='https://www.chatbase.co/embed.min.js'
+			chatbotId='kIjPNUQCBNQTNMUt1ldgG'
+			domain='www.chatbase.co'
+			defer
+		></script>
 	</body>
 </html>
