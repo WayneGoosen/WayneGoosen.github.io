@@ -32,7 +32,10 @@ const unsluglifyNameCategory = unsluglify(params.category!.toLowerCase())
 const posts = page.data
 ---
 
-<BaseLayout title={params.category}>
+<BaseLayout
+	title={params.category}
+	description={`See all blog posts with the following category: ${params.category}/`}
+>
 	<TitlePage title={unsluglifyNameCategory} />
 	<ListCategories activeCategory={params.category} />
 	<ListPosts posts={posts} />
