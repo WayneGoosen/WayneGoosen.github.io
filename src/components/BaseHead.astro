@@ -16,7 +16,7 @@ const socialImageURL = new URL(ogImage ? ogImage : '/open-graph.png', Astro.url)
 
 const titleSeparator = '•'
 
-const siteTitle = `${title} ${titleSeparator} ${siteConfig.title}`
+const siteTitle = `${title}` // ${titleSeparator} ${siteConfig.title}`
 
 import { join } from 'path'
 import { AstroFont } from 'astro-font'
