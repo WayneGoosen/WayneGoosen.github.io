@@ -7,7 +7,7 @@ import ProviderAnimations from '@/components/ProviderAnimations'
 import TwSizeIndicator from '@/components/TwSizeIndicator'
 import EditBlog from '@/components/editBlog'
 import PlausibleAnalytics from '@/components/PlausibleAnalytics'
-const { title, description, image, articleDate } = Astro.props
+const { title, description, image, articleDate, isNoIndex = false } = Astro.props
 ---
 
 <html lang='en' class='scroll-smooth'>
@@ -19,6 +19,7 @@ const { title, description, image, articleDate } = Astro.props
 		<link rel='sitemap' href='/sitemap-index.xml' />
 		<meta name='msvalidate.01' content='B773311CC89DD46884A05AF0D59BF25E' />
 		<meta name='google-site-verification' content='QgzbyFVx7jxbDQP2l9cOnb6pN0NyqxITFmemST5Ot9w' />
+		{isNoIndex && <meta name='robots' content='noindex' />}
 	</head>
 
 	<body class='bg-white text-stone-950 dark:bg-[#0a0910] dark:text-white'>
@@ -46,7 +47,6 @@ const { title, description, image, articleDate } = Astro.props
 			src='https://www.chatbase.co/embed.min.js'
 			chatbotId='kIjPNUQCBNQTNMUt1ldgG'
 			domain='www.chatbase.co'
-			defer
-		></script>
+			defer></script>
 	</body>
 </html>

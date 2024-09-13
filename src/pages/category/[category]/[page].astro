@@ -35,6 +35,7 @@ const posts = page.data
 <BaseLayout
 	title={params.category}
 	description={`See all blog posts with the following category: ${params.category}/`}
+	isNoIndex={true}
 >
 	<TitlePage title={unsluglifyNameCategory} />
 	<ListCategories activeCategory={params.category} />

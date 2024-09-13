@@ -18,7 +18,11 @@ const { tag } = Astro.props
 const posts = await getPostByTag(tag)
 ---
 
-<BaseLayout title={tag} description={`See all blog posts with the following tag: ${tag}`}>
+<BaseLayout
+	title={tag}
+	description={`See all blog posts with the following tag: ${tag}`}
+	isNoIndex={true}
+>
 	<TitlePage title={tag} />
 	<ListPosts posts={posts} />
 </BaseLayout>
