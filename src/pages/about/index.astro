@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout'
 import TitlePage from '@/components/TitlePage'
+import { Image } from 'astro:assets'
+import aboutBannerImage from '../../assets/images/letsshipmorebanner.png'
+import profilePicture from '../../assets/images/pp-with-color.png'
 ---
 
 <BaseLayout
@@ -8,7 +11,18 @@ import TitlePage from '@/components/TitlePage'
 	description='Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.'
 >
 	<TitlePage title='About' />
-	<h2 class='text-3xl font-bold first-letter:uppercase'>Howzit, I'm Wayne! 👋</h2>
+	<div class='relative'>
+		<Image src={aboutBannerImage} alt="Let's ship more banner." class='w-full' />
+		<Image
+			src={profilePicture}
+			alt="Wayne Goosen's profile picture"
+			width={200}
+			height={200}
+			class='rounded-full absolute top-42 left-0 transform -translate-y-1/2 border-4 border-white dark:border-[#0a0910]'
+		/>
+	</div>
+
+	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>Howzit, I'm Wayne! 👋</h2>
 	<ul>
 		<li>🔭 Software and DevOps Engineer</li>
 		<li>🏠 I live in Switzerland🇨🇭, but I am proudly South African!🇿🇦</li>
