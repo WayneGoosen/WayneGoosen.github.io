@@ -206,6 +206,10 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm run sync`         | Generates TypeScript types for all Astro modules. [Learn more](https://docs.astro.build/en/reference/cli-reference/#astro-sync). |
 | `pnpm run lint`         | Lint with ESLint                                                                                                                 |
 
+## Troubleshoot MDX
+
+See [MDX troubleshooting](https://mdxjs.com/docs/troubleshooting-mdx/)
+
 ## 👋 Contributors
 
 <a href="https://github.com/danielcgilibert/blog-template/graphs/contributors">

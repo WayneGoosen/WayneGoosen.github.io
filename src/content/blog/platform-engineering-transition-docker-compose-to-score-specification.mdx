@@ -23,9 +23,7 @@ Here’s the context I’m coming from:
 - Applications are deployed via pipelines or a GitOps approach.
 - Infrastructure is managed using Terraform.
 
-While much is in place, we’re still a long way from offering self-service and an outstanding developer experience (DevEx).
-
-I decided to explore the Score specification, aiming to standardize a platform-agnostic specification for developers to use across environments.
+With a focus on self-service and an outstanding developer experience (DevEx), I decided to explore the Score specification, aiming to standardize a platform-agnostic specification for developers to use across environments. In future posts, I plan to walk through each layer of the stack, providing a complete platform overview.
 
 This post will guide you on transitioning from Docker Compose to the Score Specification. Once transitioned, Score can generate deployment modes in Docker Compose or other supported options.
 
@@ -39,9 +37,7 @@ For a deeper understanding, the [score documentation site](https://docs.score.de
 
 # Our Example application
 
-The application we will use is a standard, box - box - cylinder... Frontend, Backend and Database. The technology used is NextJs, .NET and Microsoft SQL Server. See this repository for the [source](). This is not production ready source - it is only a sample for this demo of score.
-
-The application we’ll use follows a basic architecture: frontend, backend, and database—what I like to call box-box-cylinder. The technologies used are Next.js for the frontend, .NET for the backend, and Microsoft SQL Server for the database. See the [source code](https://github.com/WayneGoosen/blog-wayne-goosen-examples/tree/main/docker-compose-to-score). Note that this is not production-ready; it’s just a sample for demonstrating Score.
+The application we’ll use follows a basic architecture: frontend, backend, and database — known as box-box-cylinder (pictured when you see the architecture diagram). The technologies used are Next.js for the frontend, .NET for the backend, and Microsoft SQL Server for the database. See the [source code](https://github.com/WayneGoosen/blog-wayne-goosen-examples/tree/main/docker-compose-to-score). Note that this is not production-ready; it’s just a sample for demonstrating Score.
 
 ## Docker Compose File
 
@@ -157,7 +153,7 @@ containers:
 
 # Generate Docker Compose file with score-compose
 
-You would need to follow the [instructions](https://docs.score.dev/docs/score-implementation/score-compose/#installation) to install score-compose first and assuming necessary Docker is installed.
+You would need to follow the [instructions](https://docs.score.dev/docs/score-implementation/score-compose/#installation) to install score-compose first and assuming Docker is already installed.
 
 ## Initialize
 
@@ -183,7 +179,7 @@ It’s important to note that the generate command is accumulative, meaning each
 
 Here’s a breakdown of the parameters:
 
-- --build: Specifies an optional build context for the container. The format is either --build=container=./dir or --build=container={"context":"./dir"}. This is especially useful for development as it allows the image to be built when running docker compose up, unlike the database, where we use an existing image.
+- --build: Specifies an optional build context for the container. The format is either --build=container=./dir or --build=container=\{"context":"./dir"\}. This is especially useful for development as it allows the image to be built when running docker compose up, unlike the database, where we use an existing image.
 - -o: Specifies the output file for the generated Docker Compose file. By default, this is compose.yaml.
 
 We run one last generate to expose ports to the host:
@@ -194,7 +190,7 @@ score-compose generate score-database.yaml --publish 8002:backend:8002 --publish
 
 Here’s a deeper look into the parameter:
 
-    •	--publish: This flag makes the defined ports accessible on the Docker host. It follows the format HOST_PORT:<workload name>:CONTAINER_PORT, where the container port is the port inside the container that you want to map to the host. This is useful for making services in your workloads accessible from outside the container environment.
+    •	--publish: This flag makes the defined ports accessible on the Docker host. It follows the format HOST_PORT:/<workload name/>:CONTAINER_PORT, where the container port is the port inside the container that you want to map to the host. This is useful for making services in your workloads accessible from outside the container environment.
 
 ## Generated Docker-Compose file
 
