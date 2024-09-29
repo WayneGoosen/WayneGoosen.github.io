@@ -4,9 +4,17 @@ import ListPosts from '@/components/ListPosts'
 import TitlePage from '@/components/TitlePage'
 import BaseLayout from '@/layouts/BaseLayout'
 import { getPosts } from '@/utils'
+import { siteConfig } from '@/data/site.config'
 
 const MAX_POSTS = 5 // max number of posts to show on the home page
 const posts = await getPosts(MAX_POSTS)
+
+// Get the selected language from the URL
+const url = new URL(Astro.url.href)
+const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
+
+// Filter posts by the selected language
+const filteredPosts = posts.filter(post => post.data.language === selectedLanguage)
 ---
 
 <BaseLayout
@@ -18,7 +26,7 @@ const posts = await getPosts(MAX_POSTS)
 
 	<div>
 		<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
-		<ListPosts FirstBig={true} posts={posts} />
+		<ListPosts FirstBig={true} posts={filteredPosts} />
 	</div>
 </BaseLayout>
 

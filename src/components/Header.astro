@@ -27,6 +27,19 @@ const SOCIALNETWORKS = [
 		icon: TwitterIcon
 	}
 ]
+
+// Language options
+const LANGUAGES = [
+	{ code: 'en', name: 'English' },
+	{ code: 'es', name: 'Español' }
+]
+
+function changeLanguage(event) {
+	const selectedLanguage = event.target.value
+	const currentPath = window.location.pathname
+	const newPath = `/${selectedLanguage}${currentPath}`
+	window.location.href = newPath
+}
 ---
 
 <header class='relative flex items-center h-12 font-semibold'>
@@ -67,6 +80,13 @@ const SOCIALNETWORKS = [
 			<Search />
 		</div>
 		<ToggleTheme />
+			<select onChange={changeLanguage} class='ml-4 p-2 border rounded'>
+				{
+					LANGUAGES.map((lang) => (
+						<option value={lang.code}>{lang.name}</option>
+					))
+				}
+			</select>
 		<button id='astro-header-drawer-button' type='button' class='md:ml-6 md:hidden'>
 			<MenuIcon />
 			<span class='sr-only'>Show Menu</span>

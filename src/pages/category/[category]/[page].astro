@@ -30,6 +30,13 @@ const { page } = Astro.props
 
 const unsluglifyNameCategory = unsluglify(params.category!.toLowerCase())
 const posts = page.data
+
+// Get the selected language from the URL
+const url = new URL(Astro.url.href)
+const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
+
+// Filter posts by the selected language
+const filteredPosts = posts.filter(post => post.data.language === selectedLanguage)
 ---
 
 <BaseLayout
@@ -39,6 +46,6 @@ const posts = page.data
 >
 	<TitlePage title={unsluglifyNameCategory} />
 	<ListCategories activeCategory={params.category} />
-	<ListPosts posts={posts} />
+	<ListPosts posts={filteredPosts} />
 	<Pagination page={page} />
 </BaseLayout>

@@ -2,7 +2,16 @@
 import BaseLayout from '@/layouts/BaseLayout'
 import TitlePage from '@/components/TitlePage'
 import { getTags } from '@/utils'
+import { siteConfig } from '@/data/site.config'
+
 const tags = await getTags()
+
+// Get the selected language from the URL
+const url = new URL(Astro.url.href)
+const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
+
+// Filter tags by the selected language
+const filteredTags = tags.filter(tag => tag.language === selectedLanguage)
 ---
 
 <BaseLayout
@@ -13,7 +22,7 @@ const tags = await getTags()
 	<TitlePage title='Tags' />
 	<div class='flex justify-center flex-wrap gap-4'>
 		{
-			tags.map((tag) => (
+			filteredTags.map((tag) => (
 				<a
 					href={`/tags/${tag}`}
 					class='inline-block bg-gray-200  rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'
