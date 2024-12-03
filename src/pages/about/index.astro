@@ -14,7 +14,8 @@ const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguag
 const content = {
 	en: {
 		title: 'About',
-		description: 'Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.',
+		description:
+			'Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.',
 		intro: "Howzit, I'm Wayne! 👋",
 		points: [
 			'🔭 Software and DevOps Engineer',
@@ -27,7 +28,8 @@ const content = {
 	},
 	es: {
 		title: 'Acerca de',
-		description: 'Breve introducción de Wayne Goosen, autor de este blog. Explora mi pasión por el software/DevOps y cómo pretendo informar a través de experiencias e ideas personales.',
+		description:
+			'Breve introducción de Wayne Goosen, autor de este blog. Explora mi pasión por el software/DevOps y cómo pretendo informar a través de experiencias e ideas personales.',
 		intro: '¡Hola, soy Wayne! 👋',
 		points: [
 			'🔭 Ingeniero de Software y DevOps',
@@ -41,11 +43,8 @@ const content = {
 }[selectedLanguage]
 ---
 
-<BaseLayout
-	title={content.title}
-	description={content.description}
->
-	<TitlePage title={content.title} />
+<BaseLayout title={content?.title} description={content?.description}>
+	<TitlePage title={content?.title} />
 	<div class='relative'>
 		<Image src={aboutBannerImage} alt="Let's ship more banner." class='w-full' />
 		<Image
@@ -57,8 +56,8 @@ const content = {
 		/>
 	</div>
 
-	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>{content.intro}</h2>
+	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>{content?.intro}</h2>
 	<ul>
-		{content.points.map(point => <li>{point}</li>)}
+		{content?.points.map((point) => <li>{point}</li>)}
 	</ul>
 </BaseLayout>
