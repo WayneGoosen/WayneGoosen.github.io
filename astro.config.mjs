@@ -21,7 +21,7 @@ export default defineConfig({
     syntaxHighlight: 'shiki',
     shikiConfig: {
       experimentalThemes: {
-        light: 'vitesse-light',
+        light: 'dracula',
         dark: 'material-theme-palenight'
       },
       wrap: true
