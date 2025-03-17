@@ -14,7 +14,7 @@ const url = new URL(Astro.url.href)
 const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
 
 // Filter posts by the selected language
-const filteredPosts = posts.filter(post => post.data.language === selectedLanguage)
+const filteredPosts = posts.filter((post) => post.data.language === selectedLanguage)
 ---
 
 <BaseLayout

@@ -9,6 +9,7 @@ import { getPosts } from '@/utils'
 import SButton from '@/components/mdx/SButton'
 import Disqus from '@/components/Disqus'
 import { disqusConfig } from '@/data/disqus.config'
+import { siteConfig } from '@/data/site.config'
 
 const posts = await getCollection('blog')
 export async function getStaticPaths() {
@@ -36,6 +37,13 @@ const relatedPosts = getRelatedPosts(post)
 const { Content, headings, remarkPluginFrontmatter } = await post.render()
 
 const disqusEnabled = disqusConfig.enabled
+
+// Get the selected language from the URL
+const url = new URL(Astro.url.href)
+const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
+
+// Filter related posts by the selected language
+const filteredRelatedPosts = relatedPosts.filter(p => p.data.language === selectedLanguage)
 ---
 
 <BlogPost
@@ -63,7 +71,7 @@ const disqusEnabled = disqusConfig.enabled
 			<footer>
 			    <div class="giscus"></div>
 				<h2 class='font-bold text-lg dark:text-white mb-6'>Related Posts</h2>
-				<ListRelatedPosts posts={relatedPosts} />
+				<ListRelatedPosts posts={filteredRelatedPosts} />
 			</footer>
 		</article>
 	</div>

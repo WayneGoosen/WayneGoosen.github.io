@@ -215,3 +215,13 @@ See [MDX troubleshooting](https://mdxjs.com/docs/troubleshooting-mdx/)
 <a href="https://github.com/danielcgilibert/blog-template/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=danielcgilibert/blog-template" />
 </a>
+
+## Localisation
+
+https://docs.astro.build/en/guides/internationalization/
+
+https://docs.astro.build/en/recipes/i18n/#hide-default-language-in-the-url
+
+# Plausible
+
+https://plausible.io/blog/utm-tracking-tags

@@ -17,6 +17,13 @@ export default defineConfig({
       wrap: true
     }
   },
+  i18n: {
+    defaultLocale: "en",
+    locales: ["de", "en"],
+    routing: {
+      prefixDefaultLocale: false
+  }
+  },
   integrations: [mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: {

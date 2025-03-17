@@ -4,13 +4,47 @@ import TitlePage from '@/components/TitlePage'
 import { Image } from 'astro:assets'
 import aboutBannerImage from '../../assets/images/letsshipmorebanner.png'
 import profilePicture from '../../assets/images/pp-with-color.png'
+import { siteConfig } from '@/data/site.config'
+
+// Get the selected language from the URL
+const url = new URL(Astro.url.href)
+const selectedLanguage = url.pathname.split('/')[1] || siteConfig.defaultLanguage
+
+// Language-specific content
+const content = {
+	en: {
+		title: 'About',
+		description:
+			'Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.',
+		intro: "Howzit, I'm Wayne! 👋",
+		points: [
+			'🔭 Software and DevOps Engineer',
+			'🏠 I live in Switzerland🇨🇭, but I am proudly South African!🇿🇦',
+			"🌱 I'm currently learning about any technologies/methodologies on how to ship more",
+			'🚢 As every developer, the idea book is packed, aiming to ship at least one project a month. Follow to keep up to date 🙌',
+			'👨‍💻 Sharing my knowledge on my blog',
+			'🤖 Diving into Generative AI... Not sure this needs to be a disclaimer but I am using GitHub Copilot with my projects 🚀'
+		]
+	},
+	es: {
+		title: 'Acerca de',
+		description:
+			'Breve introducción de Wayne Goosen, autor de este blog. Explora mi pasión por el software/DevOps y cómo pretendo informar a través de experiencias e ideas personales.',
+		intro: '¡Hola, soy Wayne! 👋',
+		points: [
+			'🔭 Ingeniero de Software y DevOps',
+			'🏠 Vivo en Suiza🇨🇭, ¡pero estoy orgullosamente sudafricano!🇿🇦',
+			'Estoy aprendiendo sobre cualquier tecnología/metodología sobre cómo enviar más',
+			'🚢 Como todo desarrollador, el libro de ideas está lleno, con el objetivo de enviar al menos un proyecto al mes. Sigue para mantenerte al día 🙌',
+			'👨‍💻 Compartiendo mi conocimiento en mi blog',
+			'🤖 Sumergiéndome en la IA generativa... No estoy seguro de que esto necesite ser un descargo de responsabilidad, pero estoy usando GitHub Copilot con mis proyectos 🚀'
+		]
+	}
+}[selectedLanguage]
 ---
 
-<BaseLayout
-	title='About'
-	description='Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.'
->
-	<TitlePage title='About' />
+<BaseLayout title={content?.title} description={content?.description}>
+	<TitlePage title={content?.title} />
 	<div class='relative'>
 		<Image src={aboutBannerImage} alt="Let's ship more banner." class='w-full' />
 		<Image
@@ -22,19 +56,8 @@ import profilePicture from '../../assets/images/pp-with-color.png'
 		/>
 	</div>
 
-	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>Howzit, I'm Wayne! 👋</h2>
+	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>{content?.intro}</h2>
 	<ul>
-		<li>🔭 Software and DevOps Engineer</li>
-		<li>🏠 I live in Switzerland🇨🇭, but I am proudly South African!🇿🇦</li>
-		<li>🌱 I'm currently learning about any technologies/methodologies on how to ship more</li>
-		<li>
-			🚢 As every developer, the idea book is packed, aiming to ship at least one project a month.
-			Follow to keep up to date 🙌
-		</li>
-		<li>👨‍💻 Sharing my knowledge on my blog</li>
-		<li>
-			🤖 Diving into Generative AI... Not sure this needs to be a disclaimer but I am using GitHub
-			Copilot with my projects 🚀
-		</li>
+		{content?.points.map((point) => <li>{point}</li>)}
 	</ul>
 </BaseLayout>
