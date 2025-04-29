@@ -5,7 +5,6 @@ import BaseLayout from '@/layouts/BaseLayout'
 import Tag from '@/components/Tag'
 import type { MarkdownHeading } from 'astro'
 import { Image } from 'astro:assets'
-import advert from '../assets/images/shipitnow.png'
 
 type Props = {
 	id: CollectionEntry<'blog'>['id']
@@ -69,19 +68,7 @@ const articleDate = pubDate.toISOString()
 		<div>
 			<slot />
 		</div>
-	</article>
-	<a href='https://seaeyecd-shop.fourthwall.com/promo/SHIPITNOW' target="_blank">
-		<Image
-			src={advert}
-			width={1000}
-			height={500}
-			quality={100}
-			format='png'
-			loading='eager'
-			class='rounded-md w-full max-h-[300px]  md:max-h-[500px] my-8 object-cover cursor-pointer'
-			alt='img of CI/CD merch advert'
-		/>
-	</a>
+	</article>	
 </BaseLayout>
 
 <script src="https://giscus.app/client.js"

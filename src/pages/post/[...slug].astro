@@ -9,6 +9,8 @@ import { getPosts } from '@/utils'
 import SButton from '@/components/mdx/SButton'
 import Disqus from '@/components/Disqus'
 import { disqusConfig } from '@/data/disqus.config'
+import { Image } from 'astro:assets'
+import advert from '../../assets/images/shipitnow.png'
 
 const posts = await getCollection('blog')
 export async function getStaticPaths() {
@@ -61,6 +63,18 @@ const disqusEnabled = disqusConfig.enabled
 
 			<!-- related posts -->
 			<footer>
+				<a href='https://seaeyecd-shop.fourthwall.com/promo/SHIPITNOW' target="_blank">
+					<Image
+						src={advert}
+						width={1000}
+						height={100}
+						quality={100}
+						format='png'
+						loading='eager'
+						class='rounded-md w-full max-h-[300px]  md:max-h-[500px] my-8 object-cover cursor-pointer'
+						alt='img of CI/CD merch advert'
+					/>
+				</a>
 			    <div class="giscus"></div>
 				<h2 class='font-bold text-lg dark:text-white mb-6'>Related Posts</h2>
 				<ListRelatedPosts posts={relatedPosts} />
