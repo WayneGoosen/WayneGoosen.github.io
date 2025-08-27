@@ -1,0 +1,158 @@
+---
+import { LANGUAGES, getTranslation } from '@/data/languages'
+import { getCurrentLanguage } from '@/utils/language'
+
+// This will need to be handled client-side since we need to detect browser language
+const currentLanguage = 'en' // Default fallback for SSR
+---
+
+<div class="relative language-switcher">
+	<button 
+		id="language-button" 
+		class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
+		aria-expanded="false"
+		aria-haspopup="true"
+	>
+		<span id="current-language-flag">🇺🇸</span>
+		<span id="current-language-name">English</span>
+		<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+		</svg>
+	</button>
+
+	<div 
+		id="language-dropdown" 
+		class="absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg opacity-0 invisible transition-all duration-200 dark:bg-gray-800 dark:border-gray-600"
+	>
+		<div class="py-1">
+			{LANGUAGES.map((language) => (
+				<button
+					class="language-option flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+					data-language={language.code}
+				>
+					<span class="mr-3">{language.flag}</span>
+					{language.name}
+				</button>
+			))}
+		</div>
+	</div>
+</div>
+
+<style>
+	.language-switcher .language-dropdown.show {
+		opacity: 1;
+		visibility: visible;
+	}
+</style>
+
+<script>
+	// Define languages and utilities inline since we can't import in client scripts
+	const LANGUAGES = [
+		{ code: 'en', name: 'English', flag: '🇺🇸' },
+		{ code: 'es', name: 'Español', flag: '🇪🇸' }
+	]
+	const DEFAULT_LANGUAGE = 'en'
+
+	function getLanguageByCode(code) {
+		return LANGUAGES.find(lang => lang.code === code)
+	}
+
+	function getBrowserLanguage() {
+		if (typeof window === 'undefined') return DEFAULT_LANGUAGE
+		const browserLang = navigator.language.split('-')[0]
+		const supportedLanguages = LANGUAGES.map(lang => lang.code)
+		return supportedLanguages.includes(browserLang) ? browserLang : DEFAULT_LANGUAGE
+	}
+
+	function getStoredLanguage() {
+		if (typeof window === 'undefined') return null
+		return localStorage.getItem('preferredLanguage')
+	}
+
+	function setStoredLanguage(languageCode) {
+		if (typeof window === 'undefined') return
+		localStorage.setItem('preferredLanguage', languageCode)
+	}
+
+	function getCurrentLanguage() {
+		const stored = getStoredLanguage()
+		if (stored && LANGUAGES.some(lang => lang.code === stored)) {
+			return stored
+		}
+		return getBrowserLanguage()
+	}
+
+	// Initialize the language switcher
+	function initLanguageSwitcher() {
+		const button = document.getElementById('language-button')
+		const dropdown = document.getElementById('language-dropdown')
+		const currentLangFlag = document.getElementById('current-language-flag')
+		const currentLangName = document.getElementById('current-language-name')
+		const languageOptions = document.querySelectorAll('.language-option')
+
+		if (!button || !dropdown) return
+
+		// Set initial language
+		const currentLang = getCurrentLanguage()
+		const langConfig = getLanguageByCode(currentLang)
+		if (langConfig && currentLangFlag && currentLangName) {
+			currentLangFlag.textContent = langConfig.flag
+			currentLangName.textContent = langConfig.name
+		}
+
+		// Toggle dropdown
+		button.addEventListener('click', (e) => {
+			e.stopPropagation()
+			const isVisible = dropdown.classList.contains('opacity-100')
+			
+			if (isVisible) {
+				dropdown.classList.remove('opacity-100', 'visible')
+				dropdown.classList.add('opacity-0', 'invisible')
+			} else {
+				dropdown.classList.remove('opacity-0', 'invisible')
+				dropdown.classList.add('opacity-100', 'visible')
+			}
+		})
+
+		// Handle language selection
+		languageOptions.forEach(option => {
+			option.addEventListener('click', (e) => {
+				const languageCode = e.currentTarget.dataset.language
+				if (languageCode) {
+					changeLanguage(languageCode)
+				}
+			})
+		})
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', () => {
+			dropdown.classList.remove('opacity-100', 'visible')
+			dropdown.classList.add('opacity-0', 'invisible')
+		})
+	}
+
+	function changeLanguage(languageCode) {
+		// Store the preference
+		setStoredLanguage(languageCode)
+		
+		// Update UI
+		const langConfig = getLanguageByCode(languageCode)
+		const currentLangFlag = document.getElementById('current-language-flag')
+		const currentLangName = document.getElementById('current-language-name')
+		
+		if (langConfig && currentLangFlag && currentLangName) {
+			currentLangFlag.textContent = langConfig.flag
+			currentLangName.textContent = langConfig.name
+		}
+
+		// For now, just reload the page
+		window.location.reload()
+	}
+
+	// Initialize when DOM is loaded
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initLanguageSwitcher)
+	} else {
+		initLanguageSwitcher()
+	}
+</script>
