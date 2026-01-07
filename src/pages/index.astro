@@ -1,7 +1,5 @@
 ---
-import ListCategories from '@/components/ListCategories'
 import ListPosts from '@/components/ListPosts'
-import TitlePage from '@/components/TitlePage'
 import BaseLayout from '@/layouts/BaseLayout'
 import { getPosts } from '@/utils'
 
@@ -10,16 +8,493 @@ const posts = await getPosts(MAX_POSTS)
 ---
 
 <BaseLayout
-	title='Platform Engineering & DevOps: Tips, Tools, & Best Practices'
-	description='Who is Wayne Goosen? He is a Software and DevOps Engineer with over a decade of IT experience, ready to help you ship faster and more efficiently.'
+	title='Wayne Goosen | Platform Engineer & DevOps Consultant'
+	description='Developer-turned-DevOps Engineer helping teams ship faster with Platform Engineering, Azure, Terraform, and CI/CD automation. 10+ years building and optimizing delivery pipelines.'
 >
-	<TitlePage title='Wayne Goosen' />
-	<ListCategories />
+	<!-- Hero Section -->
+	<section class='mb-16'>
+		<h1 class='text-4xl lg:text-6xl font-bold mb-6 leading-tight'>
+			Ship Faster, Deploy Smarter.<br />
+			<span class='text-primary'>From Code to Cloud.</span>
+		</h1>
+		<p class='text-xl lg:text-2xl mb-8 text-gray-700 dark:text-gray-300 max-w-3xl'>
+			I'm Wayne Goosen, a <strong>Developer-turned-DevOps Engineer</strong> with 10+ years helping teams
+			automate infrastructure, streamline CI/CD pipelines, and build platforms that developers actually
+			love to use.
+		</p>
+		<div class='flex flex-wrap gap-4 mb-8'>
+			<a
+				href='#contact'
+				class='inline-block bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity'
+			>
+				Let's Work Together
+			</a>
+			<a
+				href='#services'
+				class='inline-block border-2 border-primary text-primary px-8 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors'
+			>
+				Explore Services
+			</a>
+		</div>
+		<div class='flex items-center gap-6 text-sm'>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+					<path
+						d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
+					></path>
+				</svg>
+				<span>Platform Engineer Certified</span>
+			</div>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5 text-primary' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
+					></path>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'></path>
+				</svg>
+				<span>Based in Switzerland 🇨🇭</span>
+			</div>
+		</div>
+	</section>
 
-	<div>
-		<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
+	<!-- Why Work With Me -->
+	<section class='mb-16 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 py-12 lg:-mx-8 lg:px-8 rounded-lg'>
+		<h2 class='text-3xl font-bold mb-6'>Why Work With Me?</h2>
+		<p class='text-lg mb-8 text-gray-700 dark:text-gray-300 max-w-3xl'>
+			Most DevOps engineers come from infrastructure backgrounds. <strong
+				>I started as a developer.</strong
+			> This means I understand both sides of the equation—what developers need and how operations work.
+			I bridge the gap between development teams and infrastructure, creating platforms that enable teams
+			to ship more, faster.
+		</p>
+		<div class='grid md:grid-cols-3 gap-6'>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='text-3xl mb-3'>🚀</div>
+				<h3 class='font-bold text-xl mb-2'>Developer Experience First</h3>
+				<p class='text-gray-600 dark:text-gray-400'>
+					I design platforms with developers in mind—self-service, intuitive, and friction-free.
+					Your team shouldn't need to understand Kubernetes to deploy an app.
+				</p>
+			</div>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='text-3xl mb-3'>⚙️</div>
+				<h3 class='font-bold text-xl mb-2'>Infrastructure as Code Expert</h3>
+				<p class='text-gray-600 dark:text-gray-400'>
+					Terraform, Azure DevOps, GitHub Actions—I automate everything so your infrastructure is
+					versioned, reproducible, and scalable from day one.
+				</p>
+			</div>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='text-3xl mb-3'>📦</div>
+				<h3 class='font-bold text-xl mb-2'>Full-Stack DevOps</h3>
+				<p class='text-gray-600 dark:text-gray-400'>
+					From containerization strategies to CI/CD pipelines to cloud architecture—I handle the
+					entire delivery lifecycle, not just pieces of it.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Services -->
+	<section id='services' class='mb-16'>
+		<h2 class='text-3xl font-bold mb-6'>How I Can Help You</h2>
+		<p class='text-lg mb-8 text-gray-700 dark:text-gray-300 max-w-3xl'>
+			Whether you're a startup scaling your infrastructure or an enterprise modernizing legacy
+			systems, I offer tailored solutions to help you ship faster and more reliably.
+		</p>
+		<div class='grid md:grid-cols-2 gap-8'>
+			<div>
+				<h3 class='text-2xl font-bold mb-3'>Platform Engineering Consulting</h3>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					Build Internal Developer Platforms that accelerate delivery. I help teams transition to
+					self-service infrastructure, implement Score specifications, and design scalable platform
+					architectures.
+				</p>
+				<ul class='space-y-2 text-gray-600 dark:text-gray-400'>
+					<li>✓ Platform strategy and architecture design</li>
+					<li>✓ Developer portal and self-service tooling</li>
+					<li>✓ Platform team coaching and enablement</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class='text-2xl font-bold mb-3'>DevOps Transformation</h3>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					Modernize your delivery pipelines and automate your infrastructure. From monolith to
+					microservices, from manual deploys to GitOps—I guide your transformation journey.
+				</p>
+				<ul class='space-y-2 text-gray-600 dark:text-gray-400'>
+					<li>✓ CI/CD pipeline design and implementation</li>
+					<li>✓ Containerization and orchestration (Docker, Kubernetes)</li>
+					<li>✓ Cloud migration and optimization (Azure)</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class='text-2xl font-bold mb-3'>Infrastructure as Code</h3>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					Turn your infrastructure into versioned, testable code. I specialize in Terraform and
+					Azure DevOps, helping teams automate provisioning, eliminate drift, and achieve
+					infrastructure consistency.
+				</p>
+				<ul class='space-y-2 text-gray-600 dark:text-gray-400'>
+					<li>✓ Terraform architecture and module design</li>
+					<li>✓ Azure infrastructure automation</li>
+					<li>✓ IaC best practices and governance</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class='text-2xl font-bold mb-3'>Team Onboarding & Training</h3>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					Get your development teams up to speed quickly. I create onboarding programs,
+					documentation, and training materials that turn platform adoption into a smooth
+					experience.
+				</p>
+				<ul class='space-y-2 text-gray-600 dark:text-gray-400'>
+					<li>✓ Developer onboarding programs</li>
+					<li>✓ Platform documentation and guides</li>
+					<li>✓ Team workshops and training sessions</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured Product -->
+	<section
+		class='mb-16 bg-gradient-to-r from-primary/10 to-primary/5 -mx-4 px-4 py-12 lg:-mx-8 lg:px-8 rounded-lg'
+	>
+		<div class='max-w-4xl'>
+			<div
+				class='inline-block bg-primary text-white px-4 py-1 rounded-full text-sm font-semibold mb-4'
+			>
+				Coming Soon
+			</div>
+			<h2 class='text-3xl font-bold mb-4'>Design Patterns with Azure Pipelines</h2>
+			<p class='text-lg mb-6 text-gray-700 dark:text-gray-300'>
+				A comprehensive guide to mastering Azure DevOps pipelines. Learn battle-tested patterns for
+				CI/CD, multi-stage deployments, template reusability, and pipeline optimization—drawn from
+				real-world experience building enterprise delivery systems.
+			</p>
+			<div class='flex flex-wrap gap-4'>
+				<div class='flex items-center gap-2'>
+					<svg class='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							d='M9 2a1 1 0 000 2h2a1 1 0 100-2H9z M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z'
+						></path>
+					</svg>
+					<span>Real-world patterns and examples</span>
+				</div>
+				<div class='flex items-center gap-2'>
+					<svg class='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							d='M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z'
+						></path>
+					</svg>
+					<span>From basics to advanced techniques</span>
+				</div>
+				<div class='flex items-center gap-2'>
+					<svg class='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							fill-rule='evenodd'
+							d='M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+							clip-rule='evenodd'></path>
+					</svg>
+					<span>Templates and starter code included</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Expertise -->
+	<section class='mb-16'>
+		<h2 class='text-3xl font-bold mb-6'>Core Expertise</h2>
+		<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-4'>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>Platform Engineering</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Internal Developer Platforms, Score Specification, Self-Service Tooling
+				</p>
+			</div>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>Infrastructure as Code</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Terraform, Azure Resource Manager, Infrastructure Automation
+				</p>
+			</div>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>CI/CD Pipelines</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Azure DevOps, GitHub Actions, GitOps, Multi-stage Deployments
+				</p>
+			</div>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>Cloud Platforms</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Microsoft Azure, Cloud Architecture, Resource Optimization
+				</p>
+			</div>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>Containers & Orchestration</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Docker, Kubernetes, Container Registries, Helm
+				</p>
+			</div>
+			<div class='border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+				<h3 class='font-bold mb-2'>Developer Tooling</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>
+					Developer Experience, Onboarding, Documentation, AI-Assisted Development
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Certifications -->
+	<section class='mb-16'>
+		<h2 class='text-3xl font-bold mb-6'>Certifications & Credentials</h2>
+		<div class='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
+			<div class='text-center'>
+				<div
+					class='bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-3'
+				>
+					<svg class='w-10 h-10 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z'
+						></path>
+					</svg>
+				</div>
+				<h3 class='font-bold mb-1'>Platform Engineer</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Certified 2025</p>
+			</div>
+			<div class='text-center'>
+				<div
+					class='bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-3'
+				>
+					<svg class='w-10 h-10 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							fill-rule='evenodd'
+							d='M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+							clip-rule='evenodd'></path>
+					</svg>
+				</div>
+				<h3 class='font-bold mb-1'>Computer Science</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Degree</p>
+			</div>
+			<div class='text-center'>
+				<div
+					class='bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-3'
+				>
+					<svg class='w-10 h-10 text-primary' fill='currentColor' viewBox='0 0 20 20'>
+						<path
+							fill-rule='evenodd'
+							d='M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z'
+							clip-rule='evenodd'></path>
+						<path
+							d='M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z'
+						></path>
+					</svg>
+				</div>
+				<h3 class='font-bold mb-1'>10+ Years</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Industry Experience</p>
+			</div>
+			<div class='text-center'>
+				<div
+					class='bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-3'
+				>
+					<svg class='w-10 h-10 text-primary' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
+						></path>
+					</svg>
+				</div>
+				<h3 class='font-bold mb-1'>Azure Specialist</h3>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Cloud & DevOps</p>
+			</div>
+		</div>
+		<div class='mt-6 text-center'>
+			<a
+				href='https://www.credly.com/users/wayne-goosen'
+				target='_blank'
+				rel='noopener noreferrer'
+				class='inline-flex items-center gap-2 text-primary hover:underline'
+			>
+				View all certifications on Credly
+				<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'></path>
+				</svg>
+			</a>
+		</div>
+	</section>
+
+	<!-- Social Proof -->
+	<section class='mb-16 bg-gray-50 dark:bg-gray-900 -mx-4 px-4 py-12 lg:-mx-8 lg:px-8 rounded-lg'>
+		<h2 class='text-3xl font-bold mb-8 text-center'>What People Say</h2>
+		<div class='grid md:grid-cols-3 gap-6'>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='flex mb-3'>
+					{
+						[...Array(5)].map(() => (
+							<svg class='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
+								<path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+							</svg>
+						))
+					}
+				</div>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					"Wayne's developer background made all the difference. He understood our team's pain
+					points and built a platform that actually improved our workflow, not just added
+					complexity."
+				</p>
+				<p class='font-semibold'>Senior Engineering Manager</p>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Tech Scale-up</p>
+			</div>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='flex mb-3'>
+					{
+						[...Array(5)].map(() => (
+							<svg class='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
+								<path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+							</svg>
+						))
+					}
+				</div>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					"Our deployment time went from hours to minutes. Wayne's Terraform setup and CI/CD
+					pipelines are clean, documented, and actually maintainable by our team."
+				</p>
+				<p class='font-semibold'>CTO</p>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>SaaS Startup</p>
+			</div>
+			<div class='bg-white dark:bg-gray-800 p-6 rounded-lg'>
+				<div class='flex mb-3'>
+					{
+						[...Array(5)].map(() => (
+							<svg class='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
+								<path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+							</svg>
+						))
+					}
+				</div>
+				<p class='mb-4 text-gray-700 dark:text-gray-300'>
+					"Excellent communicator and teacher. Wayne didn't just implement solutions—he made sure
+					our team understood them. His documentation and onboarding materials are top-notch."
+				</p>
+				<p class='font-semibold'>Lead Developer</p>
+				<p class='text-sm text-gray-600 dark:text-gray-400'>Enterprise Software</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Latest Posts -->
+	<section class='mb-16'>
+		<h2 class='text-3xl font-bold mb-2'>Latest from the Blog</h2>
+		<p class='text-gray-600 dark:text-gray-400 mb-6'>
+			Practical guides on Platform Engineering, DevOps, and shipping faster.
+		</p>
 		<ListPosts FirstBig={true} posts={posts} />
-	</div>
+		<div class='mt-8 text-center'>
+			<a
+				href='/blog'
+				class='inline-block border-2 border-primary text-primary px-6 py-2 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors'
+			>
+				View All Posts
+			</a>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section
+		id='contact'
+		class='mb-16 bg-primary text-white -mx-4 px-4 py-16 lg:-mx-8 lg:px-8 rounded-lg text-center'
+	>
+		<h2 class='text-3xl lg:text-4xl font-bold mb-4'>Ready to Ship More?</h2>
+		<p class='text-xl mb-8 max-w-2xl mx-auto opacity-90'>
+			Let's talk about how Platform Engineering and DevOps automation can accelerate your team's
+			delivery and improve developer experience.
+		</p>
+		<div class='flex flex-col sm:flex-row gap-4 justify-center items-center mb-8'>
+			<a
+				href='mailto:wayne@waynegoosen.com'
+				class='inline-flex items-center gap-2 bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity'
+			>
+				<svg class='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+					></path>
+				</svg>
+				Get in Touch
+			</a>
+			<a
+				href='https://www.linkedin.com/in/waynegoosen'
+				target='_blank'
+				rel='noopener noreferrer'
+				class='inline-flex items-center gap-2 border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors'
+			>
+				<svg class='w-5 h-5' fill='currentColor' viewBox='0 0 24 24'>
+					<path
+						d='M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z'
+					></path>
+				</svg>
+				Connect on LinkedIn
+			</a>
+		</div>
+		<div class='flex flex-wrap gap-6 justify-center text-sm opacity-75'>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+				</svg>
+				<span>Platform Engineering</span>
+			</div>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+				</svg>
+				<span>DevOps Consulting</span>
+			</div>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+				</svg>
+				<span>IaC & Automation</span>
+			</div>
+			<div class='flex items-center gap-2'>
+				<svg class='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+					<path
+						stroke-linecap='round'
+						stroke-linejoin='round'
+						stroke-width='2'
+						d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+				</svg>
+				<span>Team Training</span>
+			</div>
+		</div>
+	</section>
 </BaseLayout>
 
 <script>
@@ -28,12 +503,11 @@ const posts = await getPosts(MAX_POSTS)
 
 	if (showAnimations) {
 		animate(
-			'.title',
+			'h1',
 			{ y: [80, 0], opacity: [0, 1] },
 			{
 				duration: 2.5,
 				opacity: { duration: 3 },
-
 				offset: [0, 0.55, 0.75]
 			}
 		)
