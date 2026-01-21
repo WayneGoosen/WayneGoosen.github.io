@@ -67,6 +67,46 @@ import { AstroFont } from 'astro-font'
 <!-- RSS auto-discovery -->
 <link rel='alternate' type='application/rss+xml' title={siteConfig.title} href='/rss.xml' />
 
+<!-- Schema.org JSON-LD -->
+<script
+	type='application/ld+json'
+	set:html={JSON.stringify(
+		articleDate
+			? {
+					'@context': 'https://schema.org',
+					'@type': 'BlogPosting',
+					headline: title,
+					description: description,
+					image: socialImageURL,
+					datePublished: articleDate,
+					author: {
+						'@type': 'Person',
+						name: siteConfig.author,
+						url: Astro.site
+					},
+					publisher: {
+						'@type': 'Person',
+						name: siteConfig.author
+					},
+					mainEntityOfPage: {
+						'@type': 'WebPage',
+						'@id': canonicalURL
+					}
+				}
+			: {
+					'@context': 'https://schema.org',
+					'@type': 'WebSite',
+					name: siteConfig.title,
+					description: siteConfig.description,
+					url: Astro.site,
+					author: {
+						'@type': 'Person',
+						name: siteConfig.author
+					}
+				}
+	)}
+/>
+
 <AstroFont
 	config={[
 		{

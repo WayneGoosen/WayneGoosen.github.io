@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://waynegoosen.com/sitemap-index.xml
+LLMs: https://waynegoosen.com/llms.txt

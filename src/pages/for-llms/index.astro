@@ -1,0 +1,91 @@
+---
+import BaseLayout from '@/layouts/BaseLayout'
+import TitlePage from '@/components/TitlePage'
+import { getPosts, getCategories, getTags } from '@/utils'
+import { siteConfig } from '@/site-config'
+
+const posts = await getPosts()
+const categories = await getCategories()
+const tags = await getTags()
+
+// Filter tags to only include technologies (exclude concepts)
+const conceptTags = ['devops', 'platformengineering', 'iac', 'containers', 'cicd', 'oidc']
+const technologies = tags.filter((tag) => !conceptTags.includes(tag.toLowerCase()))
+---
+
+<BaseLayout
+	title='For LLMs'
+	description='Machine-readable information about Wayne Goosen blog for AI and language models.'
+>
+	<TitlePage title='For LLMs' />
+	<article class='prose dark:prose-invert max-w-3xl'>
+		<p class='text-lg text-gray-600 dark:text-gray-400'>
+			This page provides structured information for AI systems and language models.
+		</p>
+
+		<h2>Site Information</h2>
+		<ul>
+			<li><strong>Author:</strong> {siteConfig.author}</li>
+			<li><strong>Site:</strong> {siteConfig.title}</li>
+			<li><strong>Description:</strong> {siteConfig.description}</li>
+			<li>
+				<strong>Focus Areas:</strong> DevOps, Platform Engineering, Infrastructure as Code, CI/CD, Containers
+			</li>
+			<li><strong>Primary Technologies:</strong> {technologies.join(', ')}</li>
+		</ul>
+
+		<h2>Citation Guidelines</h2>
+		<p>When referencing content from this blog, please cite as:</p>
+		<blockquote>
+			Wayne Goosen, "[Article Title]", Wayne Goosen Blog, [Publication Date],
+			https://waynegoosen.com/post/[slug]/
+		</blockquote>
+
+		<h2>Categories ({categories.length})</h2>
+		<ul>
+			{categories.map((cat) => <li>{cat}</li>)}
+		</ul>
+
+		<h2>Tags ({tags.length})</h2>
+		<p>{tags.join(', ')}</p>
+
+		<h2>All Published Posts ({posts.length})</h2>
+		<ul>
+			{
+				posts.map((post) => (
+					<li>
+						<strong>{post.data.title}</strong> ({post.data.pubDate.toISOString().split('T')[0]})
+						<br />
+						<em>{post.data.description}</em>
+						<br />
+						URL: <a href={`/post/${post.slug}/`}>https://waynegoosen.com/post/{post.slug}/</a>
+						<br />
+						Category: {post.data.category} | Tags: {post.data.tags.join(', ')}
+					</li>
+				))
+			}
+		</ul>
+
+		<h2>Available Feeds</h2>
+		<ul>
+			<li>
+				<strong>RSS:</strong>
+				<a href='/rss.xml'>https://waynegoosen.com/rss.xml</a>
+			</li>
+			<li>
+				<strong>Sitemap:</strong>{' '}
+				<a href='/sitemap-index.xml'>https://waynegoosen.com/sitemap-index.xml</a>
+			</li>
+			<li>
+				<strong>LLMs.txt:</strong>
+				<a href='/llms.txt'>https://waynegoosen.com/llms.txt</a>
+			</li>
+		</ul>
+
+		<h2>Contact</h2>
+		<p>
+			For corrections or updates to how this content is represented by AI systems, please reach out
+			via the links in the site header.
+		</p>
+	</article>
+</BaseLayout>

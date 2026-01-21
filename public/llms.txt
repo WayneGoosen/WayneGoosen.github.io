@@ -1,0 +1,21 @@
+# Wayne Goosen Blog
+
+> Personal blog by Wayne Goosen covering DevOps, Platform Engineering, Infrastructure as Code (IaC), CI/CD pipelines, and containerization.
+
+Wayne Goosen is a DevOps and Platform Engineering professional. This blog contains technical tutorials and guides focused on Azure, Terraform, GitHub Actions, Docker, and Streamlit deployments.
+
+## Blog Posts
+
+- [Azure Federated Identity Credentials with Terraform and GitHub Actions](https://waynegoosen.com/post/azure-federated-identity-credentials-terraform-github-actions-guide/): Guide to setting up passwordless authentication between GitHub Actions and Azure using federated identity credentials
+- [Pass Azure DevOps Pipeline Parameters to Terraform](https://waynegoosen.com/post/pass-azure-devops-pipeline-parameters-variables-terraform/): How to pass variables from Azure DevOps pipelines to Terraform configurations
+- [Platform Engineering: Docker Compose to Score Specification](https://waynegoosen.com/post/platform-engineering-transition-docker-compose-to-score-specification/): Transitioning from Docker Compose to Score specification for platform engineering
+- [Streamlit Deployment Guide Part 1: Containerization](https://waynegoosen.com/post/streamlit-deployment-guide-part-1-containerization/): Containerizing Streamlit applications with Docker
+- [Streamlit Deployment Guide Part 2: GitHub Workflow](https://waynegoosen.com/post/streamlit-deployment-guide-part-2-gitHub-workflow/): CI/CD pipeline for Streamlit apps using GitHub Actions
+- [Streamlit Deployment Guide Part 3: Azure Infrastructure](https://waynegoosen.com/post/streamlit-deployment-guide-part-3-azure-infra/): Deploying Streamlit to Azure infrastructure
+- [Streamlit Deployment Guide Part 4: GitHub Terraform Workflow](https://waynegoosen.com/post/streamlit-deployment-guide-part-4-github-tf-workflow/): Infrastructure as Code workflow for Streamlit deployments
+
+## Optional
+
+- [RSS Feed](https://waynegoosen.com/rss.xml): Subscribe to blog updates
+- [About](https://waynegoosen.com/about/): Learn more about Wayne Goosen
+- [For LLMs](https://waynegoosen.com/for-llms/): Machine-readable information with citation guidelines
