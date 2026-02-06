@@ -14,7 +14,7 @@ import advert from '../../assets/images/shipitnow.png'
 
 const posts = await getCollection('blog')
 export async function getStaticPaths() {
-	const posts = await getPosts()
+	const posts = await getCollection('blog')
 
 	return posts.map((post) => ({
 		params: { slug: post.slug },

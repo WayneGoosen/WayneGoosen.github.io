@@ -14,7 +14,7 @@ title: >-
 ---
 
 import { Image } from 'astro:assets'
-import websitePreview from '../../assets/images/website.png'
+// import websitePreview from '../../assets/images/website.png'
 
 This showcases the Terraform code to manage the Infrastructure to host your Streamlit application. It continues a series detailing the process of deploying a Streamlit app to Azure, broken down into the following parts:
 
@@ -249,6 +249,6 @@ Follow these steps to view your deployed website:
 2. Navigate to the web app within the resource group rg-streamlit-poc.
 3. In the overview section, you should see ‘Default Domain’ with a link. Click it. The URL should be similar to https://app-azure-streamlit-poc-b548.azurewebsites.net/.
 
-<Image src={websitePreview} alt='A Streamlit website preview.' />
+{/* <Image src={websitePreview} alt='A Streamlit website preview.' /> */}
 
 In the next part, we will go through automating the infrastructure provisioning via GitHub workflows.

@@ -15,8 +15,8 @@ title: >-
 ---
 
 import { Image } from 'astro:assets'
-import terraformError from '../../assets/images/terraform-bool-fail.png'
-import pipelineTrigger from '../../assets/images/pipeline-run.png'
+// import terraformError from '../../assets/images/terraform-bool-fail.png'
+// import pipelineTrigger from '../../assets/images/pipeline-run.png'
 
 This post showcases how to set up Azure pipeline parameters or variables on a pipeline and pass them to Terraform as variables. It covers string and boolean types. In most cases, a tfvars file is used, but there may be a use case when just one variable is needed, and this is where Azure pipeline parameters/variables come in handy.
 
@@ -130,7 +130,7 @@ parameters:
 
 Since there is no default value, it is a required parameter:
 
-<Image src={pipelineTrigger} alt='Pipeline Run.' />
+{/* <Image src={pipelineTrigger} alt='Pipeline Run.' /> */}
 
 In the plan, this commandOptions snippet using '-var' is used to pass the Azure pipelines parameter to Terraform:
 
@@ -199,7 +199,7 @@ Pass this parameter to Terraform using -var:
 
 When triggering the updated pipeline manually, you will face the following error:
 
-<Image src={terraformError} alt='Terraform Bool Fail Error.' />
+{/* <Image src={terraformError} alt='Terraform Bool Fail Error.' /> */}
 
 The error message **a bool is required; to convert from string, use lowercase "false"** gives us a good indication on where the error comes from. Let’s add a simple task to show what the string value of isCreateEnabled is:
 
