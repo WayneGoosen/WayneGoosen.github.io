@@ -1,5 +1,6 @@
 ---
 // Contact section with form that posts to Azure Function API
+const contactApiUrl = import.meta.env.PUBLIC_CONTACT_API_URL || ''
 ---
 
 <section id='contact' class='py-24 bg-obsidian scroll-mt-24'>
@@ -238,16 +239,15 @@
 	</div>
 </section>
 
-<script>
-	const form = document.getElementById('contact-form') as HTMLFormElement
-	const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement
+<script define:vars={{ contactApiUrl }}>
+	const form = document.getElementById('contact-form')
+	const submitBtn = document.getElementById('submit-btn')
 	const btnText = document.getElementById('btn-text')
 	const btnLoading = document.getElementById('btn-loading')
 	const successMessage = document.getElementById('success-message')
 	const errorMessage = document.getElementById('error-message')
 
-	const API_URL =
-		'https://leadcapture-hdf9csdhcmdxd5hj.northeurope-01.azurewebsites.net/api/ContactForm?code=YKIL3nsiR64UPyg5ijTkZ2CcIy0YYKjUsfnTfl3kEHUoAzFuyi8gvA=='
+	const API_URL = contactApiUrl
 
 	form?.addEventListener('submit', async (e) => {
 		e.preventDefault()
