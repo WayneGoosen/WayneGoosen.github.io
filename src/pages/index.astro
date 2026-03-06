@@ -1,41 +1,21 @@
 ---
-import ListCategories from '@/components/ListCategories'
-import ListPosts from '@/components/ListPosts'
-import TitlePage from '@/components/TitlePage'
-import BaseLayout from '@/layouts/BaseLayout'
-import { getPosts } from '@/utils'
-
-const MAX_POSTS = 5 // max number of posts to show on the home page
-const posts = await getPosts(MAX_POSTS)
+import LandingLayout from '../layouts/LandingLayout.astro'
+import Hero from '../components/landing/Hero.astro'
+import ProblemStatement from '../components/landing/ProblemStatement.astro'
+import Certs from '../components/landing/Certs.astro'
+import Services from '../components/landing/Services.astro'
+import BlogPosts from '../components/landing/BlogPosts.astro'
+import Contact from '../components/landing/Contact.astro'
 ---
 
-<BaseLayout
-	title='Platform Engineering & DevOps: Tips, Tools, & Best Practices'
-	description='Who is Wayne Goosen? He is a Software and DevOps Engineer with over a decade of IT experience, ready to help you ship faster and more efficiently.'
+<LandingLayout
+	title='Wayne Goosen | Platform Engineering & DevOps Consultant'
+	description='Turn Enterprise DevOps Chaos Into Standardized Golden Paths. Strategic consulting on platform engineering, production-ready blueprints, and self-service platforms that scale.'
 >
-	<TitlePage title='Wayne Goosen' />
-	<ListCategories />
-
-	<div>
-		<h2 class='text-lg font-medium tracking-wide text-end'>Latest Posts</h2>
-		<ListPosts FirstBig={true} posts={posts} />
-	</div>
-</BaseLayout>
-
-<script>
-	import { animate } from 'motion'
-	const showAnimations = localStorage.getItem('animations') === 'true'
-
-	if (showAnimations) {
-		animate(
-			'.title',
-			{ y: [80, 0], opacity: [0, 1] },
-			{
-				duration: 2.5,
-				opacity: { duration: 3 },
-
-				offset: [0, 0.55, 0.75]
-			}
-		)
-	}
-</script>
+	<Hero />
+	<ProblemStatement />
+	<Certs />
+	<Services />
+	<BlogPosts />
+	<Contact />
+</LandingLayout>

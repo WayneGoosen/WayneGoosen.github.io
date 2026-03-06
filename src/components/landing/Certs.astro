@@ -1,0 +1,157 @@
+---
+import { Image } from 'astro:assets'
+import platformEngineer from '../../assets/images/certs/platform-engineering-certified-practioner.png'
+import devopsExpert from '../../assets/images/certs/devops-engineer-expert.png'
+import azureDeveloper from '../../assets/images/certs/azure-developer-associate.png'
+import azureFundamentals from '../../assets/images/certs/azure-fundamentals.png'
+import gitopsScale from '../../assets/images/certs/git-ops-scale.png'
+import gitopsFundamentals from '../../assets/images/certs/git-ops-fundamentals.png'
+
+const certifications = [
+	{
+		name: 'Platform Engineer Certified Practitioner',
+		issuer: 'CNCF',
+		id: 'CNCF-PE-CP',
+		image: platformEngineer,
+		level: 'Practitioner'
+	},
+	{
+		name: 'DevOps Engineer Expert',
+		issuer: 'Microsoft Certified',
+		id: 'MS-DE-303',
+		image: devopsExpert,
+		level: 'Expert (3-Star)'
+	},
+	{
+		name: 'Azure Developer Associate',
+		issuer: 'Microsoft Certified',
+		id: 'MS-AZ-204',
+		image: azureDeveloper,
+		level: 'Associate (2-Star)'
+	},
+	{
+		name: 'GitOps Certified: Scale',
+		issuer: 'Octopus Deploy',
+		id: 'OD-GITS-02',
+		image: gitopsScale,
+		level: 'Advanced'
+	},
+	{
+		name: 'GitOps Certified: Fundamentals',
+		issuer: 'Octopus Deploy',
+		id: 'OD-GITF-01',
+		image: gitopsFundamentals,
+		level: 'Core'
+	},
+	{
+		name: 'Azure Fundamentals',
+		issuer: 'Microsoft Certified',
+		id: 'MS-AZ-900',
+		image: azureFundamentals,
+		level: 'Fundamentals (1-Star)'
+	}
+]
+
+// Duplicate for infinite scroll effect
+const duplicatedCerts = [...certifications, ...certifications]
+---
+
+<section id='expertise' class='py-24 relative overflow-hidden bg-obsidian scroll-mt-24'>
+	<!-- Background radial glow -->
+	<div
+		class='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-orange-600/5 blur-[120px] rounded-full pointer-events-none'
+	>
+	</div>
+
+	<div class='container mx-auto px-6 mb-16 relative z-10'>
+		<div class='max-w-2xl text-left'>
+			<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+				Credentials Ledger
+			</div>
+			<h2 class='text-4xl md:text-6xl font-bold mb-6 text-white tracking-tighter'>
+				Verified Expertise.
+			</h2>
+			<p class='text-slate-400 text-lg font-light leading-relaxed'>
+				Industry-recognized certifications from Microsoft, CNCF, and Octopus Deploy validate
+				expertise in cloud infrastructure, platform engineering, and modern DevOps practices.
+			</p>
+		</div>
+	</div>
+
+	<div class='relative flex overflow-hidden z-10'>
+		<div
+			class='absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-obsidian to-transparent z-20 pointer-events-none'
+		>
+		</div>
+		<div
+			class='absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-obsidian to-transparent z-20 pointer-events-none'
+		>
+		</div>
+
+		<div class='flex gap-8 animate-infinite-scroll whitespace-nowrap py-4'>
+			{
+				duplicatedCerts.map((cert, idx) => (
+					<div class='flex-shrink-0 w-[320px] cyber-card rounded-2xl group transition-all duration-500 hover:-translate-y-2 bg-slate-900/40 border-slate-800/50'>
+						<div class='h-64 relative flex items-center justify-center p-12 bg-slate-950/50'>
+							{/* Decorative circuit lines */}
+							<div class='absolute inset-0 opacity-10'>
+								<svg width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'>
+									<defs>
+										<pattern
+											id={`pattern-${idx}`}
+											width='20'
+											height='20'
+											patternUnits='userSpaceOnUse'
+										>
+											<path d='M 20 0 L 0 0 0 20' fill='none' stroke='white' stroke-width='0.5' />
+										</pattern>
+									</defs>
+									<rect width='100%' height='100%' fill={`url(#pattern-${idx})`} />
+								</svg>
+							</div>
+
+							<div class='relative z-10 w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110'>
+								<Image
+									src={cert.image}
+									alt={cert.name}
+									class='max-w-full max-h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all'
+									width={200}
+									height={200}
+								/>
+							</div>
+
+							<div class='absolute top-4 right-4 px-3 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-[8px] font-mono text-slate-500 tracking-tighter'>
+								ID: {cert.id}
+							</div>
+						</div>
+
+						<div class='p-8 whitespace-normal'>
+							<div class='flex items-center gap-3 mb-2'>
+								<div class='w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]' />
+								<span class='text-[10px] font-mono text-slate-500 uppercase tracking-widest'>
+									{cert.level}
+								</span>
+							</div>
+							<h3 class='text-xl font-bold text-white group-hover:text-orange-400 transition-colors leading-tight mb-2'>
+								{cert.name}
+							</h3>
+							<p class='text-slate-500 text-sm font-medium mb-6 uppercase tracking-wider'>
+								{cert.issuer}
+							</p>
+
+							<div class='pt-6 border-t border-slate-800/50 flex items-center justify-between'>
+								<div class='text-[9px] font-mono text-slate-600 uppercase tracking-widest'>
+									Authorized Integrity
+								</div>
+								<div class='flex gap-1'>
+									<div class='w-1 h-1 rounded-full bg-slate-700' />
+									<div class='w-1 h-1 rounded-full bg-orange-500' />
+								</div>
+							</div>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>

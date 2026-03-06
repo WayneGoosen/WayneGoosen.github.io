@@ -24,3 +24,20 @@ pnpm-debug.log*
 .DS_Store
 
 node_modules
+
+# Playwright MCP
+.playwright-mcp/
+
+# Personal/reference documents
+*.pdf
+plan.md
+seo-plan.md
+
+# Screenshots and temporary images
+blog-post-*.png
+
+# Design reference folders
+wayne-goosen-brand-landing-page/
+
+# Backup/test content
+src/content/backup/

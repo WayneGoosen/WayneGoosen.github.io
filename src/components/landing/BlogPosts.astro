@@ -1,0 +1,88 @@
+---
+import { getPosts } from '../../utils'
+
+// Get 3 latest posts from actual blog
+const posts = await getPosts(3)
+
+// Helper function to format date
+function formatDate(date: Date): string {
+	return date.toLocaleDateString('en-us', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric'
+	})
+}
+---
+
+<section id='blog' class='py-24 bg-slate-950 scroll-mt-24'>
+	<div class='container mx-auto px-6'>
+		<div class='flex flex-col md:flex-row justify-between items-end mb-16 gap-6'>
+			<div class='max-w-xl text-left'>
+				<h2 class='text-4xl font-bold mb-4 text-white'>Insights & Thoughts</h2>
+				<p class='text-slate-400'>
+					Deep dives into DevOps, platform architecture, and the future of cloud engineering.
+				</p>
+			</div>
+			<a
+				href='/blog'
+				class='px-6 py-3 rounded-xl border border-slate-800 text-white hover:bg-slate-800 hover:text-orange-400 transition-colors text-sm font-semibold'
+			>
+				View All Posts
+			</a>
+		</div>
+
+		<div class='grid grid-cols-1 md:grid-cols-3 gap-8'>
+			{
+				posts.map((post) => (
+					<a
+						href={`/post/${post.slug}/`}
+						class='cyber-card p-8 rounded-2xl group hover:border-orange-500/50 transition-all duration-300 flex flex-col h-full bg-slate-900/40'
+					>
+						<div class='flex gap-2 mb-6'>
+							{post.data.tags?.slice(0, 2).map((tag) => (
+								<span class='text-[10px] font-bold uppercase tracking-wider text-orange-400 px-2 py-1 bg-orange-400/10 rounded-md'>
+									{tag}
+								</span>
+							))}
+						</div>
+						<div class='text-slate-500 text-xs font-medium mb-3 uppercase tracking-widest'>
+							{formatDate(post.data.pubDate)}
+						</div>
+						<h3 class='text-xl font-bold mb-4 leading-tight text-white group-hover:text-orange-400 transition-colors'>
+							{post.data.title}
+						</h3>
+						<p class='text-slate-400 text-sm leading-relaxed mb-8 flex-grow line-clamp-3'>
+							{post.data.description}
+						</p>
+						<div class='flex items-center gap-2 text-orange-400 text-sm font-bold group-hover:gap-4 transition-all uppercase tracking-widest'>
+							Read Article
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								class='h-4 w-4'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke='currentColor'
+							>
+								<path
+									stroke-linecap='round'
+									stroke-linejoin='round'
+									stroke-width='2'
+									d='M17 8l4 4m0 0l-4 4m4-4H3'
+								/>
+							</svg>
+						</div>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.line-clamp-3 {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

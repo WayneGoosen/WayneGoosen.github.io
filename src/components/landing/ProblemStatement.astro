@@ -1,0 +1,212 @@
+---
+// Problem Statement section with interactive pain points
+const painPoints = [
+	{
+		id: '01',
+		label: 'SYSTEM_BOTTLENECK',
+		title: 'Every team needs something different. Every request lands on your desk.',
+		description:
+			'Your Slack lights up before your first coffee. Another team needs a new AKS cluster. Someone\'s pipeline is failing in production. Three PRs are waiting for your review because "you\'re the only one who understands the Terraform." Meanwhile, your backlog grows. The platform roadmap you pitched last quarter? Still a slide deck.',
+		severity: 'CRITICAL'
+	},
+	{
+		id: '02',
+		label: 'SCALING_FRICTION',
+		title: "The patterns that worked for 5 teams don't survive 30.",
+		description:
+			'Copy-paste YAML spreads like wildfire. Each team invents their own "standard." You find three different ways to deploy to AKS, five different approaches to secrets management, and nobody can explain why. When something breaks at 2am, you\'re the only one who knows where to look.',
+		severity: 'CRITICAL'
+	},
+	{
+		id: '03',
+		label: 'TALENT_DRAIN',
+		title: 'Your best engineers spend their days answering the same questions.',
+		description:
+			'"How do I configure the ArgoCD sync?" "Why is my pipeline failing?" "Can you review this Helm chart?" They\'re not building. They\'re babysitting. And the talented ones start updating their LinkedIn.',
+		severity: 'HIGH'
+	},
+	{
+		id: '04',
+		label: 'TECH_DEBT_COMPOUND',
+		title: 'The longer you wait, the harder the dig-out becomes.',
+		description:
+			'Technical debt compounds. Tribal knowledge concentrates. Every new hire takes longer to onboard because "it\'s complicated" and "we\'ll document it eventually." You know what needs to happen. You just can\'t find the time to make it happen.',
+		severity: 'HIGH'
+	}
+]
+---
+
+<section class='py-32 relative bg-obsidian overflow-hidden border-y border-slate-900'>
+	<!-- Background Gradients -->
+	<div
+		class='absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(220,38,38,0.03)_0%,transparent_50%)] pointer-events-none'
+	>
+	</div>
+
+	<div class='container mx-auto px-6 relative z-10'>
+		<div class='max-w-4xl mx-auto text-center mb-24'>
+			<div
+				class='inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 text-red-500 font-mono text-[10px] mb-8 tracking-[0.3em] uppercase font-bold animate-pulse'
+			>
+				DIAGNOSTIC_REPORT: OPERATIONAL_FRICTION
+			</div>
+			<h2
+				class='text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-[0.9] mb-8'
+			>
+				Without Golden Paths, <br />
+				<span class='text-red-600'>You Become the Bottleneck.</span>
+			</h2>
+			<div class='flex flex-col items-center gap-4'>
+				<p class='text-slate-500 font-mono text-[10px] uppercase tracking-[0.4em]'>
+					Select a node to inspect failure details
+				</p>
+				<div class='flex items-center gap-2'>
+					<div class='w-12 h-[1px] bg-slate-800'></div>
+					<svg
+						class='w-4 h-4 text-red-600 animate-bounce'
+						fill='none'
+						viewBox='0 0 24 24'
+						stroke='currentColor'
+					>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M19 14l-7 7-7-7'></path>
+					</svg>
+					<div class='w-12 h-[1px] bg-slate-800'></div>
+				</div>
+			</div>
+		</div>
+
+		<div class='max-w-5xl mx-auto grid grid-cols-1 gap-4'>
+			{
+				painPoints.map((point) => (
+					<details class='group problem-card'>
+						<summary class='relative rounded-xl border cursor-pointer transition-all duration-500 overflow-hidden border-slate-800 bg-slate-950/50 hover:border-slate-700 list-none'>
+							{/* Animated Progress Bar on Open */}
+							<div class='absolute top-0 left-0 h-1 bg-gradient-to-r from-red-600 to-transparent transition-all duration-700 w-0 group-open:w-full' />
+
+							<div class='p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-8'>
+								{/* ID & Status */}
+								<div class='flex-shrink-0 w-full md:w-[140px] flex md:flex-col items-center md:items-start justify-between md:justify-center gap-4 border-b md:border-b-0 border-slate-800 pb-4 md:pb-0 md:pr-10'>
+									<span class='text-3xl font-black transition-colors font-mono text-slate-800 group-hover:text-slate-600 group-open:text-red-600'>
+										{point.id}
+									</span>
+									<div class='flex flex-col'>
+										<span class='font-mono text-[9px] text-slate-600 uppercase tracking-widest'>
+											{point.label}
+										</span>
+										<span
+											class={`font-mono text-[10px] font-bold tracking-tighter ${point.severity === 'CRITICAL' ? 'text-red-500' : 'text-amber-500'}`}
+										>
+											SEV: {point.severity}
+										</span>
+									</div>
+								</div>
+
+								{/* Title */}
+								<div class='flex-grow'>
+									<div class='flex items-center justify-between gap-4'>
+										<h3 class='text-xl md:text-2xl font-bold transition-all leading-tight text-slate-400 group-hover:text-slate-200 group-open:text-white'>
+											{point.title}
+										</h3>
+
+										{/* Expand Icon */}
+										<div class='flex-shrink-0 relative'>
+											<div class='relative w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 border-slate-700 bg-slate-900 group-hover:border-red-500 group-hover:shadow-[0_0_15px_rgba(220,38,38,0.4)] group-open:bg-red-600 group-open:border-red-600 group-open:rotate-45 group-open:scale-110 group-open:shadow-[0_0_20px_rgba(220,38,38,0.8)]'>
+												<svg
+													xmlns='http://www.w3.org/2000/svg'
+													class='h-6 w-6 transition-colors text-slate-400 group-hover:text-white group-open:text-white'
+													fill='none'
+													viewBox='0 0 24 24'
+													stroke='currentColor'
+												>
+													<path
+														stroke-linecap='round'
+														stroke-linejoin='round'
+														stroke-width='2.5'
+														d='M12 4v16m8-8H4'
+													/>
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</summary>
+
+						{/* Expandable Description */}
+						<div class='px-8 md:px-10 pb-8 md:pb-10 md:pl-[180px]'>
+							<p class='text-slate-400 text-base md:text-lg font-light leading-relaxed border-l-2 border-red-600/20 pl-6 py-1'>
+								{point.description}
+							</p>
+						</div>
+
+						<div class='absolute inset-0 pointer-events-none scanline opacity-20 hidden group-open:block' />
+					</details>
+				))
+			}
+		</div>
+
+		<div class='mt-32 text-center relative'>
+			<div
+				class='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-800 to-transparent'
+			>
+			</div>
+			<div class='relative inline-block bg-obsidian px-6 md:px-16'>
+				<h3
+					class='text-4xl md:text-7xl font-black text-white tracking-tighter uppercase select-none transition-all duration-700 hover:text-white leading-none'
+				>
+					Sound <span class='text-red-600'>Familiar?</span>
+				</h3>
+
+				<div class='mt-8 flex flex-col items-center gap-6'>
+					<p class='text-base md:text-lg text-slate-400 font-light'>
+						You don't have to navigate the chaos alone.
+					</p>
+
+					<div class='flex items-center justify-center gap-4'>
+						<div class='h-px w-8 bg-slate-800'></div>
+						<p class='text-slate-500 font-mono text-[10px] uppercase tracking-[0.5em]'>
+							System recovery initialized
+						</p>
+						<div class='h-px w-8 bg-slate-800'></div>
+					</div>
+
+					<a
+						href='#contact'
+						class='group relative inline-flex items-center gap-3 px-10 py-4 bg-white text-slate-950 rounded-xl font-bold text-lg uppercase tracking-tighter transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:scale-95'
+					>
+						I can help.
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							class='h-5 w-5 transition-transform group-hover:translate-x-2'
+							fill='none'
+							viewBox='0 0 24 24'
+							stroke='currentColor'
+						>
+							<path
+								stroke-linecap='round'
+								stroke-linejoin='round'
+								stroke-width='2.5'
+								d='M17 8l4 4m0 0l-4 4m4-4H3'></path>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Grid Overlay -->
+	<div class='absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none'></div>
+</section>
+
+<style>
+	details summary::-webkit-details-marker {
+		display: none;
+	}
+	details[open] summary {
+		@apply border-red-600/40 bg-slate-900/40 shadow-[0_0_50px_rgba(220,38,38,0.05)];
+	}
+</style>

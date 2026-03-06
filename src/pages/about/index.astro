@@ -1,40 +1,400 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout'
-import TitlePage from '@/components/TitlePage'
+import LandingLayout from '../../layouts/LandingLayout.astro'
 import { Image } from 'astro:assets'
-import aboutBannerImage from '../../assets/images/letsshipmorebanner.png'
 import profilePicture from '../../assets/images/pp-with-color.png'
+
+// Certifications data
+import platformEngineer from '../../assets/images/certs/platform-engineering-certified-practioner.png'
+import devopsExpert from '../../assets/images/certs/devops-engineer-expert.png'
+import azureDeveloper from '../../assets/images/certs/azure-developer-associate.png'
+
+const certifications = [
+	{ name: 'Platform Engineer', issuer: 'CNCF', image: platformEngineer },
+	{ name: 'DevOps Engineer Expert', issuer: 'Microsoft', image: devopsExpert },
+	{ name: 'Azure Developer', issuer: 'Microsoft', image: azureDeveloper }
+]
+
+const journey = [
+	{
+		year: '2014',
+		title: 'Software Developer',
+		description:
+			'Full-stack development at Derivco—building back-office web applications for online operators using ASP.NET, JavaScript, and MS SQL Server.'
+	},
+	{
+		year: '2019',
+		title: 'Senior Developer',
+		description:
+			'Backend development on large-scale Web APIs processing transactions for multiple external operators. Worked extensively with ASP.NET Core and high-availability systems.'
+	},
+	{
+		year: '2022',
+		title: 'DevOps Engineer',
+		description:
+			'Leading Internal Developer Platform and Portal development. Managing Azure infrastructure with AKS and Terraform. Creating shared pipeline templates and Helm charts to accelerate delivery.'
+	},
+	{
+		year: 'Now',
+		title: 'Platform Engineer',
+		description:
+			'Helping enterprises design and implement Golden Paths—standardized, self-service platforms that let teams deploy independently without compromising on governance.'
+	}
+]
+
+const principles = [
+	{
+		title: 'Golden Paths Over Gatekeeping',
+		description:
+			'Enable developers with paved roads, not approval queues. The best platform is one teams actually want to use.',
+		icon: 'path'
+	},
+	{
+		title: 'Product Mindset',
+		description:
+			'Treat the platform as a product with developers as customers. Iterate based on feedback, not assumptions.',
+		icon: 'product'
+	},
+	{
+		title: 'Automate the Toil',
+		description:
+			'If you do it twice, script it. If you script it twice, productize it. Humans should solve problems, not push buttons.',
+		icon: 'automate'
+	},
+	{
+		title: 'Brutally Honest Assessments',
+		description:
+			"I'll tell you what's broken, not what you want to hear. Real progress starts with real talk.",
+		icon: 'honest'
+	}
+]
 ---
 
-<BaseLayout
-	title='About'
-	description='Brief intro of Wayne Goosen, author of this blog. Explore my passion for software/DevOps and how I aim to inform through personal insights and experiences.'
+<LandingLayout
+	title='About Wayne Goosen | Platform Engineering Consultant'
+	description='DevOps Engineer with 10+ years experience. From software development to platform engineering—building Internal Developer Platforms, Azure infrastructure, and self-service systems that let teams ship faster.'
 >
-	<TitlePage title='About' />
-	<div class='relative'>
-		<Image src={aboutBannerImage} alt="Let's ship more banner." class='w-full' />
-		<Image
-			src={profilePicture}
-			alt="Wayne Goosen's profile picture"
-			width={200}
-			height={200}
-			class='rounded-full absolute top-42 left-0 transform -translate-y-1/2 border-4 border-white dark:border-[#0a0910]'
-		/>
-	</div>
+	<!-- Hero Section -->
+	<section
+		class='relative min-h-[70vh] flex items-center pt-32 pb-20 overflow-hidden bg-grid-pattern'
+	>
+		<div
+			class='absolute top-1/4 -right-20 w-96 h-96 bg-orange-600/10 rounded-full blur-[120px] animate-pulse'
+		>
+		</div>
+		<div
+			class='absolute bottom-1/4 -left-20 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] animate-pulse'
+			style='animation-delay: 2s'
+		>
+		</div>
 
-	<h2 class='text-3xl mt-20 font-bold first-letter:uppercase'>Howzit, I'm Wayne! 👋</h2>
-	<ul>
-		<li>🔭 Software and DevOps Engineer</li>
-		<li>🏠 I live in Switzerland🇨🇭, but I am proudly South African!🇿🇦</li>
-		<li>🌱 I'm currently learning about any technologies/methodologies on how to ship more</li>
-		<li>
-			🚢 As every developer, the idea book is packed, aiming to ship at least one project a month.
-			Follow to keep up to date 🙌
-		</li>
-		<li>👨‍💻 Sharing my knowledge on my blog</li>
-		<li>
-			🤖 Diving into Generative AI... Not sure this needs to be a disclaimer but I am using GitHub
-			Copilot with my projects 🚀
-		</li>
-	</ul>
-</BaseLayout>
+		<div class='container mx-auto px-6 relative z-10'>
+			<div class='max-w-5xl mx-auto'>
+				<div class='flex flex-col md:flex-row items-center gap-12 md:gap-20'>
+					<!-- Profile Image -->
+					<div class='relative flex-shrink-0'>
+						<div
+							class='absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full blur-2xl opacity-20 scale-110'
+						>
+						</div>
+						<div
+							class='relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-slate-800 shadow-2xl'
+						>
+							<Image
+								src={profilePicture}
+								alt='Wayne Goosen'
+								class='w-full h-full object-cover'
+								width={256}
+								height={256}
+							/>
+						</div>
+						<div
+							class='absolute -bottom-2 -right-2 px-4 py-2 bg-slate-900 border border-slate-800 rounded-full'
+						>
+							<span class='text-xs font-mono text-orange-500 uppercase tracking-wider'
+								>Available</span
+							>
+						</div>
+					</div>
+
+					<!-- Hero Text -->
+					<div class='text-center md:text-left'>
+						<div
+							class='inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 font-mono text-[10px] mb-6 tracking-[0.2em] uppercase'
+						>
+							<span class='text-emerald-500'>●</span> Platform Engineer
+						</div>
+
+						<h1
+							class='text-4xl md:text-6xl font-black tracking-tighter text-white uppercase leading-[1.1] mb-6'
+						>
+							Wayne <span class='text-orange-500'>Goosen</span>
+						</h1>
+
+						<p class='text-xl md:text-2xl text-slate-400 font-light leading-relaxed mb-8 max-w-xl'>
+							From developer to DevOps to Platform Engineer. <span class='text-white'
+								>I've seen both sides of the fence—now I work to remove it.</span
+							>
+						</p>
+
+						<div class='flex flex-wrap items-center justify-center md:justify-start gap-4'>
+							<a
+								href='/#contact'
+								class='px-8 py-4 bg-white text-slate-950 rounded-xl font-bold transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1'
+							>
+								Work With Me
+							</a>
+							<a
+								href='/blog'
+								class='px-8 py-4 bg-slate-900 text-white rounded-xl font-bold border border-slate-800 hover:border-orange-500/40 transition-all hover:-translate-y-1'
+							>
+								Read the Blog
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Story Section -->
+	<section class='py-24 bg-obsidian border-y border-slate-900'>
+		<div class='container mx-auto px-6'>
+			<div class='max-w-4xl mx-auto'>
+				<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+					The Journey
+				</div>
+				<h2 class='text-4xl md:text-5xl font-black text-white tracking-tighter mb-12'>
+					From Writing Code to <span class='text-orange-500'>Architecting Platforms</span>
+				</h2>
+
+				<div class='prose prose-lg prose-invert max-w-none mb-16'>
+					<p class='text-slate-400 text-xl leading-relaxed'>
+						I started my career as a software developer—5 years building full-stack applications,
+						then backend systems processing high-volume transactions. That foundation taught me what
+						developers actually need: fast feedback loops, reliable deployments, and infrastructure
+						that stays out of the way.
+					</p>
+					<p class='text-slate-400 text-xl leading-relaxed'>
+						Now I lead Internal Developer Platform initiatives. I design and maintain Azure
+						platforms running Kubernetes, provision infrastructure with Terraform, and create
+						pipeline templates and shared Helm charts that teams can actually reuse. The goal is
+						always the same: let developers ship applications in minutes, not days.
+					</p>
+					<p class='text-white text-xl leading-relaxed font-medium'>
+						I've seen what happens when platform teams become gatekeepers instead of enablers. My
+						approach is different—build Golden Paths that make the right way the easy way, and give
+						teams the self-service capabilities to move independently.
+					</p>
+				</div>
+
+				<!-- Timeline -->
+				<div class='relative'>
+					<div
+						class='absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-orange-500 via-slate-800 to-transparent'
+					>
+					</div>
+
+					<div class='space-y-12'>
+						{
+							journey.map((item, idx) => (
+								<div class='relative flex items-start gap-8 group'>
+									<div class='relative z-10 flex-shrink-0 w-16 h-16 rounded-full bg-slate-900 border-2 border-slate-800 flex items-center justify-center group-hover:border-orange-500 transition-colors'>
+										<span class='font-mono text-sm text-orange-500 font-bold'>{item.year}</span>
+									</div>
+									<div class='pt-3'>
+										<h3 class='text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors'>
+											{item.title}
+										</h3>
+										<p class='text-slate-400'>{item.description}</p>
+									</div>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Certifications Section -->
+	<section class='py-24 bg-slate-950'>
+		<div class='container mx-auto px-6'>
+			<div class='max-w-4xl mx-auto text-center mb-16'>
+				<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+					Credentials
+				</div>
+				<h2 class='text-4xl md:text-5xl font-black text-white tracking-tighter'>
+					Verified <span class='text-orange-500'>Expertise</span>
+				</h2>
+			</div>
+
+			<div class='grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto'>
+				{
+					certifications.map((cert) => (
+						<div class='cyber-card rounded-2xl p-8 text-center group hover:-translate-y-2 transition-all duration-500'>
+							<div class='w-24 h-24 mx-auto mb-6 relative'>
+								<Image
+									src={cert.image}
+									alt={cert.name}
+									class='w-full h-full object-contain filter group-hover:drop-shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all'
+									width={96}
+									height={96}
+								/>
+							</div>
+							<h3 class='text-lg font-bold text-white mb-1 group-hover:text-orange-400 transition-colors'>
+								{cert.name}
+							</h3>
+							<p class='text-slate-500 text-sm uppercase tracking-wider'>{cert.issuer}</p>
+						</div>
+					))
+				}
+			</div>
+
+			<div class='text-center mt-12'>
+				<a
+					href='/#expertise'
+					class='inline-flex items-center gap-2 text-orange-400 font-medium hover:gap-4 transition-all'
+				>
+					View all certifications
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						class='h-4 w-4'
+						fill='none'
+						viewBox='0 0 24 24'
+						stroke='currentColor'
+					>
+						<path
+							stroke-linecap='round'
+							stroke-linejoin='round'
+							stroke-width='2'
+							d='M17 8l4 4m0 0l-4 4m4-4H3'></path>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Philosophy Section -->
+	<section class='py-24 bg-obsidian border-y border-slate-900'>
+		<div class='container mx-auto px-6'>
+			<div class='max-w-4xl mx-auto text-center mb-16'>
+				<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+					How I Work
+				</div>
+				<h2 class='text-4xl md:text-5xl font-black text-white tracking-tighter'>
+					Platform Engineering <span class='text-orange-500'>Philosophy</span>
+				</h2>
+			</div>
+
+			<div class='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto'>
+				{
+					principles.map((principle) => (
+						<div class='group p-8 rounded-2xl border border-slate-800 bg-slate-950/50 hover:border-orange-500/30 transition-all'>
+							<div class='flex items-start gap-4'>
+								<div class='flex-shrink-0 w-12 h-12 rounded-xl bg-orange-600/10 border border-orange-600/20 flex items-center justify-center'>
+									<div class='w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]' />
+								</div>
+								<div>
+									<h3 class='text-xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors'>
+										{principle.title}
+									</h3>
+									<p class='text-slate-400 leading-relaxed'>{principle.description}</p>
+								</div>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- Personal Section -->
+	<section class='py-24 bg-slate-950'>
+		<div class='container mx-auto px-6'>
+			<div class='max-w-4xl mx-auto'>
+				<div class='flex flex-col md:flex-row items-center gap-12'>
+					<div class='flex-1'>
+						<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+							Beyond the Terminal
+						</div>
+						<h2 class='text-4xl md:text-5xl font-black text-white tracking-tighter mb-8'>
+							The <span class='text-orange-500'>Human</span> Side
+						</h2>
+
+						<div class='space-y-6 text-slate-400 text-lg leading-relaxed'>
+							<p>
+								Based in <span class='text-white font-medium'>Switzerland</span>. Originally from <span
+									class='text-white font-medium'>South Africa</span
+								>, where I studied Computer Science (Honours) at the University of KwaZulu-Natal. I
+								work remotely with teams across different time zones.
+							</p>
+							<p>
+								I write about DevOps and platform engineering on my blog—sharing lessons learned,
+								practical guides, and opinions on where the industry is heading. I believe in
+								learning in public and giving back to the community that helped me grow.
+							</p>
+							<p>
+								When I'm not writing Terraform or debugging pipelines, you'll find me exploring new
+								tools or enjoying the Swiss outdoors.
+							</p>
+						</div>
+					</div>
+
+					<div class='flex-shrink-0'>
+						<div class='grid grid-cols-2 gap-4'>
+							<div class='p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center'>
+								<div class='text-3xl mb-2'>🇨🇭</div>
+								<div class='text-sm text-slate-400'>Based in</div>
+								<div class='text-white font-bold'>Switzerland</div>
+							</div>
+							<div class='p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center'>
+								<div class='text-3xl mb-2'>🇿🇦</div>
+								<div class='text-sm text-slate-400'>Originally from</div>
+								<div class='text-white font-bold'>South Africa</div>
+							</div>
+							<div class='p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center'>
+								<div class='text-3xl mb-2'>🌍</div>
+								<div class='text-sm text-slate-400'>Working</div>
+								<div class='text-white font-bold'>Remote</div>
+							</div>
+							<div class='p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center'>
+								<div class='text-3xl mb-2'>⏰</div>
+								<div class='text-sm text-slate-400'>Timezone</div>
+								<div class='text-white font-bold'>GMT+2</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class='py-24 bg-obsidian border-t border-slate-900'>
+		<div class='container mx-auto px-6'>
+			<div class='max-w-3xl mx-auto text-center'>
+				<h2 class='text-4xl md:text-6xl font-black text-white tracking-tighter mb-8'>
+					Ready to Build Your <span class='text-orange-500'>Golden Path?</span>
+				</h2>
+				<p class='text-xl text-slate-400 mb-12 leading-relaxed'>
+					Let's talk about your platform challenges and how we can turn DevOps chaos into
+					standardized, scalable infrastructure.
+				</p>
+				<div class='flex flex-wrap items-center justify-center gap-6'>
+					<a
+						href='/#contact'
+						class='px-10 py-5 bg-white text-slate-950 rounded-xl font-bold text-lg transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1'
+					>
+						Get in Touch
+					</a>
+					<a
+						href='/#services'
+						class='px-10 py-5 bg-slate-900 text-white rounded-xl font-bold text-lg border border-slate-800 hover:border-orange-500/40 transition-all hover:-translate-y-1'
+					>
+						View Services
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</LandingLayout>
