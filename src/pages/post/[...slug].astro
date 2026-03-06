@@ -63,7 +63,7 @@ const disqusEnabled = disqusConfig.enabled
 
 			<!-- related posts -->
 			<footer>
-				<a href='https://seaeyecd-shop.fourthwall.com/promo/SHIPITNOW' target="_blank">
+				<a href='https://seaeyecd-shop.fourthwall.com/promo/SHIPITNOW' target='_blank'>
 					<Image
 						src={advert}
 						width={1000}
@@ -71,11 +71,11 @@ const disqusEnabled = disqusConfig.enabled
 						quality={100}
 						format='png'
 						loading='eager'
-						class='rounded-md w-full max-h-[300px]  md:max-h-[500px] my-8 object-cover cursor-pointer'
+						class='rounded-md w-full max-h-[300px] md:max-h-[500px] my-8 object-cover cursor-pointer'
 						alt='img of CI/CD merch advert'
 					/>
 				</a>
-			    <div class="giscus"></div>
+				<div class='giscus'></div>
 				<h2 class='font-bold text-lg dark:text-white mb-6'>Related Posts</h2>
 				<ListRelatedPosts posts={relatedPosts} />
 			</footer>

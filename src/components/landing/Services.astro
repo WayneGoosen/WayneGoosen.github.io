@@ -1,0 +1,234 @@
+---
+// Services section with accordion
+const services = [
+	{
+		id: 'SRV_01',
+		title: 'The Platform Reality Check (Audit)',
+		bestFor: 'Best for: Leaders who suspect their "DevOps" is just manual work in disguise.',
+		description:
+			'Before we build, we stop the bleeding. I audit your Azure footprint, AKS configuration, and team topology to find the hidden bottlenecks slowing you down.',
+		deliverable: 'A brutal, honest "State of the Nation" report + a prioritized fix list.',
+		outcome: 'You stop burning cash on broken processes.',
+		tags: ['Azure Audit', 'AKS Configuration', 'Team Topology']
+	},
+	{
+		id: 'SRV_02',
+		title: 'The "Golden Path" Architecture (Done-for-You)',
+		bestFor: 'Best for: Teams needing a standardized foundation, fast.',
+		description:
+			'I deploy a production-grade Reference Architecture into your Azure environment. We replace "ClickOps" with strict Infrastructure as Code (Terraform/Bicep) and git-driven pipelines.',
+		deliverable: 'Pre-configured AKS clusters, ArgoCD pipelines, and Terraform modules.',
+		outcome: 'Developers ship day 1 without breaking production.',
+		tags: ['Terraform/Bicep', 'ArgoCD', 'AKS']
+	},
+	{
+		id: 'SRV_03',
+		title: 'Platform Orchestration & IDP Engineering',
+		bestFor: 'Best for: Scaling self-service without creating a "Zombie Portal."',
+		description:
+			'A pretty frontend (Backstage) is useless without a working engine. I build the heavy-lifting backend orchestrators and API layers that actually execute requests. We wire the "Create" button to real, compliant Azure automation.',
+		deliverable: 'A fully integrated Platform Orchestrator (backend logic + frontend catalog).',
+		outcome: 'Self-service that actually works, not just a static catalog.',
+		tags: ['Backstage', 'API Orchestration', 'Azure Automation']
+	},
+	{
+		id: 'SRV_04',
+		title: 'Fractional Platform Lead',
+		bestFor: 'Best for: Teams that have the tools but lack the direction.',
+		description:
+			'Tools alone don\'t fix culture. I embed with your team (e.g., 1 day/week) to mentor your seniors, review architectural decisions, and force the "Product Mindset" adoption.',
+		deliverable: 'Weekly architecture reviews, strategy sessions, and team mentoring.',
+		outcome: 'Your existing team levels up to maintain the platform themselves.',
+		tags: ['Mentorship', 'Strategy', 'Cultural Adoption']
+	},
+	{
+		id: 'SRV_05',
+		title: 'On-Demand DevOps & Pipeline Ops',
+		bestFor: 'Best for: Teams that just need the plumbing fixed, right now.',
+		description:
+			"Not ready for a full platform? No problem. I step in to handle the critical operational tasks blocking your release. Whether it's fixing a broken CI/CD pipeline, scripting a migration, or troubleshooting Azure networking.",
+		deliverable: 'Hands-on execution for specific tickets or blockers.',
+		outcome: 'Immediate unblocking of development bottlenecks.',
+		tags: ['CI/CD Troubleshooting', 'Migration Scripts', 'Azure Networking']
+	}
+]
+---
+
+<section id='services' class='py-32 relative bg-obsidian scroll-mt-24'>
+	<!-- Subtle Background Accent -->
+	<div
+		class='absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-orange-600/5 to-transparent pointer-events-none'
+	>
+	</div>
+
+	<div class='container mx-auto px-6'>
+		<div class='flex flex-col lg:flex-row gap-20 items-start'>
+			<!-- Sticky Left Sidebar -->
+			<div class='lg:w-1/3 lg:sticky lg:top-32'>
+				<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+					Service Catalog
+				</div>
+				<h2
+					class='text-4xl md:text-6xl font-black mb-8 text-white tracking-tighter uppercase leading-[0.9]'
+				>
+					Platform <br />
+					<span class='text-orange-600'>Modules.</span>
+				</h2>
+				<p class='text-slate-400 text-lg font-light leading-relaxed mb-10'>
+					High-impact, modular services engineered to eliminate friction and establish
+					production-ready platform foundations.
+				</p>
+			</div>
+
+			<!-- Interactive Services Accordion -->
+			<div class='lg:w-2/3 space-y-6'>
+				{
+					services.map((service) => (
+						<details class='group service-accordion'>
+							<summary class='relative border rounded-2xl overflow-hidden transition-all duration-700 bg-slate-950 border-slate-800 hover:border-slate-700 hover:bg-slate-900/30 group-open:bg-slate-900/40 group-open:border-orange-500/40 group-open:shadow-[0_0_50px_rgba(249,115,22,0.08)] group-open:ring-1 group-open:ring-orange-500/20 list-none cursor-pointer'>
+								{/* Left Accent Bar */}
+								<div class='absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 bg-slate-800 group-hover:bg-slate-600 group-open:bg-orange-500 group-open:shadow-[0_0_15px_rgba(249,115,22,0.8)]' />
+
+								{/* Header */}
+								<div class='w-full text-left p-8 md:p-12 flex items-center justify-between gap-8'>
+									<div class='flex-grow'>
+										<div class='flex flex-col gap-2 mb-4'>
+											<span class='font-mono text-[10px] text-slate-700 font-bold group-hover:text-slate-500 transition-colors uppercase tracking-[0.2em]'>
+												Module {service.id}
+											</span>
+											<h3 class='text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter transition-all duration-500 text-slate-300 group-hover:text-white group-open:text-white group-open:scale-[1.02]'>
+												{service.title}
+											</h3>
+										</div>
+
+										<div class='flex items-center gap-3'>
+											<div class='h-[1px] bg-slate-800 transition-all duration-500 w-6 group-hover:w-8 group-open:w-12 group-open:bg-orange-500' />
+											<p class='text-sm md:text-base font-light transition-colors duration-500 text-slate-500 group-open:text-orange-400'>
+												{service.bestFor}
+											</p>
+										</div>
+									</div>
+
+									{/* Arrow Indicator */}
+									<div class='flex-shrink-0 w-14 h-14 rounded-full border flex items-center justify-center transition-all duration-500 border-slate-800 text-slate-600 group-hover:border-orange-500/50 group-hover:text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.1)] group-open:bg-orange-600 group-open:border-orange-600 group-open:text-white group-open:rotate-180 group-open:shadow-[0_0_30px_rgba(234,88,12,0.6)]'>
+										<svg
+											xmlns='http://www.w3.org/2000/svg'
+											class='h-7 w-7'
+											fill='none'
+											viewBox='0 0 24 24'
+											stroke='currentColor'
+										>
+											<path
+												stroke-linecap='round'
+												stroke-linejoin='round'
+												stroke-width='2.5'
+												d='M19 9l-7 7-7-7'
+											/>
+										</svg>
+									</div>
+								</div>
+							</summary>
+
+							{/* Expandable Details */}
+							<div class='px-8 md:px-12 pb-12 pt-6 border-t border-slate-800/50'>
+								<div class='grid grid-cols-1 md:grid-cols-3 gap-12 mt-8'>
+									{/* Main Description */}
+									<div class='md:col-span-2 space-y-10'>
+										<div>
+											<span class='font-mono text-[10px] text-orange-500 uppercase tracking-[0.4em] block mb-5 font-bold'>
+												The Strategic Mission
+											</span>
+											<p class='text-slate-300 leading-relaxed text-lg md:text-xl font-light'>
+												{service.description}
+											</p>
+										</div>
+
+										<div class='grid grid-cols-1 sm:grid-cols-2 gap-8'>
+											<div class='p-8 rounded-2xl bg-obsidian border border-slate-800 group/item hover:border-slate-700 transition-colors'>
+												<div class='flex items-center gap-3 mb-4'>
+													<div class='w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]' />
+													<span class='font-mono text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold'>
+														Key Deliverable
+													</span>
+												</div>
+												<p class='text-white text-base leading-relaxed font-medium'>
+													{service.deliverable}
+												</p>
+											</div>
+											<div class='p-8 rounded-2xl bg-obsidian border border-slate-800 hover:border-slate-700 transition-colors'>
+												<div class='flex items-center gap-3 mb-4'>
+													<div class='w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' />
+													<span class='font-mono text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold'>
+														Business Outcome
+													</span>
+												</div>
+												<p class='text-white text-base leading-relaxed font-medium'>
+													{service.outcome}
+												</p>
+											</div>
+										</div>
+									</div>
+
+									{/* Tech & CTA Sidebar */}
+									<div class='space-y-10'>
+										<div>
+											<span class='font-mono text-[10px] text-slate-600 uppercase tracking-[0.3em] block mb-5 font-bold'>
+												Technology Context
+											</span>
+											<div class='flex flex-wrap gap-2'>
+												{service.tags.map((tag) => (
+													<span class='px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 font-mono text-[10px] text-slate-400 uppercase tracking-tighter hover:text-white hover:border-slate-600 transition-all cursor-default'>
+														{tag}
+													</span>
+												))}
+											</div>
+										</div>
+
+										<div class='p-8 rounded-2xl bg-orange-600/[0.03] border border-orange-600/10 flex flex-col gap-6'>
+											<div>
+												<h4 class='text-white font-bold mb-2 text-sm uppercase tracking-wider'>
+													Ready to Modernize?
+												</h4>
+												<p class='text-slate-500 text-xs leading-relaxed'>
+													Get in touch to discuss the {service.id} module and evaluate system
+													compatibility.
+												</p>
+											</div>
+											<a
+												href='#contact'
+												class='w-full py-5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold transition-all text-sm uppercase tracking-[0.25em] shadow-xl shadow-orange-600/20 active:scale-95 text-center block'
+											>
+												Initialize {service.id}
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</details>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	details.service-accordion summary::-webkit-details-marker {
+		display: none;
+	}
+</style>
+
+<script>
+	// Only allow one accordion to be open at a time
+	document.querySelectorAll('.service-accordion').forEach((accordion) => {
+		accordion.addEventListener('toggle', (e) => {
+			if ((e.target as HTMLDetailsElement).open) {
+				document.querySelectorAll('.service-accordion').forEach((other) => {
+					if (other !== e.target && (other as HTMLDetailsElement).open) {
+						;(other as HTMLDetailsElement).open = false
+					}
+				})
+			}
+		})
+	})
+</script>

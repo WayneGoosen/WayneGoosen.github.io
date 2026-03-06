@@ -1,0 +1,23 @@
+---
+import ListCategories from '@/components/ListCategories'
+import ListPosts from '@/components/ListPosts'
+import BaseLayout from '@/layouts/BaseLayout'
+import { getPosts } from '@/utils'
+
+const posts = await getPosts()
+---
+
+<BaseLayout
+	title='Blog | Platform Engineering & DevOps Tips'
+	description='Deep dives into DevOps, platform architecture, and the future of cloud engineering. Tips, tools, and best practices.'
+>
+	<div class='mb-12'>
+		<h1 class='text-4xl font-bold mb-4 text-white'>Insights & Thoughts</h1>
+		<p class='text-slate-400 text-lg max-w-2xl mb-8'>
+			Deep dives into DevOps, platform architecture, and the future of cloud engineering.
+		</p>
+		<ListCategories />
+	</div>
+
+	<ListPosts FirstBig={true} posts={posts} />
+</BaseLayout>

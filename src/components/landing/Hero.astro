@@ -1,0 +1,175 @@
+---
+// Hero section with animated terminal widget
+---
+
+<section
+	class='relative min-h-screen flex items-center justify-center pt-24 pb-32 overflow-hidden bg-grid-pattern'
+>
+	<!-- Dynamic Background Elements -->
+	<div
+		class='absolute top-1/4 -left-20 w-96 h-96 bg-orange-600/10 rounded-full blur-[120px] animate-pulse'
+	>
+	</div>
+	<div
+		class='absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] animate-pulse'
+		style='animation-delay: 2s'
+	>
+	</div>
+
+	<div class='container mx-auto px-6 relative z-10'>
+		<div class='max-w-5xl mx-auto text-center'>
+			<div class='mb-14 flex flex-col items-center'>
+				<!-- Uptime Badge -->
+				<div
+					class='inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 font-mono text-[10px] mb-8 tracking-[0.2em] uppercase animate-fade-in'
+				>
+					<span class='text-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]'>●</span> 99.999% Uptime
+					Verified
+				</div>
+
+				<h1
+					class='text-4xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase leading-[1.1]'
+				>
+					<div class='block'>Turn Enterprise</div>
+					<div class='block mt-2'>
+						<span
+							class='bg-blue-600 px-3 inline-block text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]'
+							>DevOps</span
+						>{' '}
+						<span class='relative inline-block'>
+							Chaos
+							<span
+								class='absolute left-0 top-[50%] w-[110%] h-[3px] bg-red-600 -rotate-2 rounded-full -translate-x-1 shadow-[0_0_12px_rgba(220,38,38,0.6)]'
+							></span>
+						</span>
+					</div>
+					<div class='block mt-2 font-light'>Into Standardized</div>
+					<div class='block mt-4'>
+						<span
+							class='relative inline-block px-6 py-2 bg-amber-500 text-slate-950 transform -rotate-1 shadow-[0_0_60px_rgba(251,191,36,0.5)] transition-all hover:rotate-0 group/glow'
+						>
+							Golden Paths
+							<span
+								class='absolute inset-0 bg-amber-400 blur-2xl opacity-40 -z-10 group-hover/glow:opacity-70 transition-opacity rounded-lg'
+							></span>
+							<span
+								class='absolute -inset-1 bg-gradient-to-r from-orange-400 to-amber-600 blur-sm -z-10 opacity-30'
+							></span>
+						</span>
+					</div>
+				</h1>
+			</div>
+
+			<p
+				class='text-lg md:text-2xl text-slate-400 mb-12 max-w-4xl mx-auto font-light leading-relaxed'
+			>
+				Don't start from scratch. I provide strategic consulting on <span
+					class='text-white font-medium underline decoration-orange-500/30 decoration-2 underline-offset-4'
+					>platform engineering</span
+				>, 1-on-1 support, and production-ready <span
+					class='text-white font-medium underline decoration-orange-500/30 decoration-2 underline-offset-4'
+					>blueprints</span
+				> you need to build a <span
+					class='text-white font-medium underline decoration-orange-500/30 decoration-2 underline-offset-4'
+					>self-service</span
+				> platform that actually scales.
+			</p>
+
+			<div class='flex flex-col items-center gap-6 mb-20'>
+				<div class='flex flex-col sm:flex-row items-center justify-center gap-5'>
+					<a
+						href='#contact'
+						class='group w-full sm:w-auto px-10 py-5 bg-white text-slate-950 rounded-xl font-bold text-lg transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 flex items-center justify-center gap-3'
+					>
+						Work With Me
+					</a>
+					<a
+						href='#services'
+						class='w-full sm:w-auto px-10 py-5 bg-slate-900 text-white rounded-xl font-bold text-lg border border-slate-800 hover:border-orange-500/40 transition-all hover:-translate-y-1'
+					>
+						View Services
+					</a>
+				</div>
+			</div>
+
+			<!-- Terminal Widget -->
+			<div
+				class='max-w-xl mx-auto rounded-xl border border-slate-800 bg-slate-950/80 backdrop-blur-xl p-1 shadow-2xl relative'
+			>
+				<div
+					class='flex items-center justify-between px-4 py-2 border-b border-slate-900 bg-slate-900/50 rounded-t-xl'
+				>
+					<div class='flex gap-1.5'>
+						<div class='w-2 h-2 rounded-full bg-slate-800'></div>
+						<div class='w-2 h-2 rounded-full bg-slate-800'></div>
+						<div class='w-2 h-2 rounded-full bg-slate-800'></div>
+					</div>
+					<div class='text-[9px] font-mono text-slate-600 tracking-widest uppercase'>
+						system_log_stream
+					</div>
+				</div>
+				<div
+					class='p-6 text-left font-mono text-xs space-y-2 min-h-[120px] relative overflow-hidden'
+					id='terminal-logs'
+				>
+					<div class='scanline'></div>
+					<div class='flex items-start gap-3 text-slate-600'>
+						<span class='opacity-20'>01</span>
+						<span>&gt; Initializing infrastructure deployment...</span>
+					</div>
+					<div class='flex items-start gap-3 text-slate-600'>
+						<span class='opacity-20'>02</span>
+						<span>&gt; Loading Azure subscription context...</span>
+					</div>
+					<div class='flex items-start gap-3 text-orange-400'>
+						<span class='opacity-20'>03</span>
+						<span class='glow-text-orange'>&gt; terraform plan -out=main.tfplan</span>
+					</div>
+					<div class='inline-block w-1.5 h-3 bg-orange-500 animate-pulse ml-1'></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const terminalLogs = document.getElementById('terminal-logs')
+	if (terminalLogs) {
+		const deploymentSteps = [
+			'> terraform plan -out=main.tfplan',
+			'> Generating Golden Path for team-delta...',
+			'> Policy check: Compliant (ISO-27001)',
+			'> Setting up Azure Kubernetes Service cluster...',
+			'> Success: IDP Environment ready.',
+			'> [SYSTEM] Waiting for operator command...'
+		]
+
+		let currentStep = 0
+		setInterval(() => {
+			const logs = terminalLogs.querySelectorAll('.flex.items-start')
+			if (logs.length >= 3) {
+				// Update colors - make previous orange line slate
+				logs.forEach((log, i) => {
+					if (i < logs.length - 1) {
+						log.classList.remove('text-orange-400')
+						log.classList.add('text-slate-600')
+						const span = log.querySelector('span:last-child')
+						if (span) span.classList.remove('glow-text-orange')
+					}
+				})
+
+				// Update the last log with new text
+				const lastLog = logs[logs.length - 1]
+				const textSpan = lastLog.querySelector('span:last-child')
+				if (textSpan) {
+					textSpan.textContent = deploymentSteps[currentStep]
+					textSpan.classList.add('glow-text-orange')
+				}
+				lastLog.classList.remove('text-slate-600')
+				lastLog.classList.add('text-orange-400')
+
+				currentStep = (currentStep + 1) % deploymentSteps.length
+			}
+		}, 3000)
+	}
+</script>
