@@ -1,6 +1,5 @@
 ---
 // Contact section with form that posts to Azure Function API
-const contactApiUrl = import.meta.env.PUBLIC_CONTACT_API_URL || ''
 ---
 
 <section id='contact' class='py-24 bg-obsidian scroll-mt-24'>
@@ -245,7 +244,7 @@ const contactApiUrl = import.meta.env.PUBLIC_CONTACT_API_URL || ''
 	</div>
 </section>
 
-<script define:vars={{ contactApiUrl }}>
+<script>
 	const form = document.getElementById('contact-form')
 	const submitBtn = document.getElementById('submit-btn')
 	const btnText = document.getElementById('btn-text')
@@ -253,7 +252,8 @@ const contactApiUrl = import.meta.env.PUBLIC_CONTACT_API_URL || ''
 	const successMessage = document.getElementById('success-message')
 	const errorMessage = document.getElementById('error-message')
 
-	const API_URL = contactApiUrl
+	const API_URL =
+		'https://leadcapture-hdf9csdhcmdxd5hj.northeurope-01.azurewebsites.net/api/ContactForm'
 
 	form?.addEventListener('submit', async (e) => {
 		e.preventDefault()
@@ -261,13 +261,6 @@ const contactApiUrl = import.meta.env.PUBLIC_CONTACT_API_URL || ''
 		// Hide any previous messages
 		successMessage?.classList.add('hidden')
 		errorMessage?.classList.add('hidden')
-
-		// Validate API URL is configured
-		if (!API_URL) {
-			console.error('Contact API URL is not configured')
-			errorMessage?.classList.remove('hidden')
-			return
-		}
 
 		// Show loading state
 		submitBtn.disabled = true
