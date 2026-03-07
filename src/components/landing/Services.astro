@@ -242,8 +242,7 @@ const services = [
 		})
 	}
 
-	// Initialize on first load and page transitions
-	initServiceAccordions()
+	// Initialize on page load (astro:page-load fires on initial load too)
 	document.addEventListener('astro:page-load', initServiceAccordions)
 	document.addEventListener('astro:before-swap', cleanupServiceAccordions)
 </script>
