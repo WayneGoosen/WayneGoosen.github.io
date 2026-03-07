@@ -133,43 +133,59 @@
 </section>
 
 <script>
-	const terminalLogs = document.getElementById('terminal-logs')
-	if (terminalLogs) {
-		const deploymentSteps = [
-			'> terraform plan -out=main.tfplan',
-			'> Generating Golden Path for team-delta...',
-			'> Policy check: Compliant (ISO-27001)',
-			'> Setting up Azure Kubernetes Service cluster...',
-			'> Success: IDP Environment ready.',
-			'> [SYSTEM] Waiting for operator command...'
-		]
+	let terminalIntervalId: number | null = null
 
-		let currentStep = 0
-		setInterval(() => {
-			const logs = terminalLogs.querySelectorAll('.flex.items-start')
-			if (logs.length >= 3) {
-				// Update colors - make previous orange line slate
-				logs.forEach((log, i) => {
-					if (i < logs.length - 1) {
-						log.classList.remove('text-orange-400')
-						log.classList.add('text-slate-600')
-						const span = log.querySelector('span:last-child')
-						if (span) span.classList.remove('glow-text-orange')
+	function initTerminalAnimation() {
+		const terminalLogs = document.getElementById('terminal-logs')
+		if (terminalLogs) {
+			const deploymentSteps = [
+				'> terraform plan -out=main.tfplan',
+				'> Generating Golden Path for team-delta...',
+				'> Policy check: Compliant (ISO-27001)',
+				'> Setting up Azure Kubernetes Service cluster...',
+				'> Success: IDP Environment ready.',
+				'> [SYSTEM] Waiting for operator command...'
+			]
+
+			let currentStep = 0
+			terminalIntervalId = window.setInterval(() => {
+				const logs = terminalLogs.querySelectorAll('.flex.items-start')
+				if (logs.length >= 3) {
+					// Update colors - make previous orange line slate
+					logs.forEach((log, i) => {
+						if (i < logs.length - 1) {
+							log.classList.remove('text-orange-400')
+							log.classList.add('text-slate-600')
+							const span = log.querySelector('span:last-child')
+							if (span) span.classList.remove('glow-text-orange')
+						}
+					})
+
+					// Update the last log with new text
+					const lastLog = logs[logs.length - 1]
+					const textSpan = lastLog.querySelector('span:last-child')
+					if (textSpan) {
+						textSpan.textContent = deploymentSteps[currentStep]
+						textSpan.classList.add('glow-text-orange')
 					}
-				})
+					lastLog.classList.remove('text-slate-600')
+					lastLog.classList.add('text-orange-400')
 
-				// Update the last log with new text
-				const lastLog = logs[logs.length - 1]
-				const textSpan = lastLog.querySelector('span:last-child')
-				if (textSpan) {
-					textSpan.textContent = deploymentSteps[currentStep]
-					textSpan.classList.add('glow-text-orange')
+					currentStep = (currentStep + 1) % deploymentSteps.length
 				}
-				lastLog.classList.remove('text-slate-600')
-				lastLog.classList.add('text-orange-400')
-
-				currentStep = (currentStep + 1) % deploymentSteps.length
-			}
-		}, 3000)
+			}, 3000)
+		}
 	}
+
+	function cleanupTerminalAnimation() {
+		if (terminalIntervalId !== null) {
+			clearInterval(terminalIntervalId)
+			terminalIntervalId = null
+		}
+	}
+
+	// Initialize on first load and page transitions
+	initTerminalAnimation()
+	document.addEventListener('astro:page-load', initTerminalAnimation)
+	document.addEventListener('astro:before-swap', cleanupTerminalAnimation)
 </script>

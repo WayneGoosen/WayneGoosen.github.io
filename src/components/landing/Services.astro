@@ -220,15 +220,30 @@ const services = [
 
 <script>
 	// Only allow one accordion to be open at a time
-	document.querySelectorAll('.service-accordion').forEach((accordion) => {
-		accordion.addEventListener('toggle', (e) => {
-			if ((e.target as HTMLDetailsElement).open) {
-				document.querySelectorAll('.service-accordion').forEach((other) => {
-					if (other !== e.target && (other as HTMLDetailsElement).open) {
-						;(other as HTMLDetailsElement).open = false
-					}
-				})
-			}
+	function initServiceAccordions() {
+		document.querySelectorAll('.service-accordion').forEach((accordion) => {
+			accordion.addEventListener('toggle', handleAccordionToggle)
 		})
-	})
+	}
+
+	function handleAccordionToggle(e: Event) {
+		if ((e.target as HTMLDetailsElement).open) {
+			document.querySelectorAll('.service-accordion').forEach((other) => {
+				if (other !== e.target && (other as HTMLDetailsElement).open) {
+					;(other as HTMLDetailsElement).open = false
+				}
+			})
+		}
+	}
+
+	function cleanupServiceAccordions() {
+		document.querySelectorAll('.service-accordion').forEach((accordion) => {
+			accordion.removeEventListener('toggle', handleAccordionToggle)
+		})
+	}
+
+	// Initialize on first load and page transitions
+	initServiceAccordions()
+	document.addEventListener('astro:page-load', initServiceAccordions)
+	document.addEventListener('astro:before-swap', cleanupServiceAccordions)
 </script>
