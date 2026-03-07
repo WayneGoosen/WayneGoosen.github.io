@@ -89,17 +89,13 @@ const navLinks = [
 </nav>
 
 <script>
-	const navbar = document.getElementById('landing-navbar')
-	const mobileMenuBtn = document.getElementById('mobile-menu-btn')
-	const mobileMenu = document.getElementById('mobile-menu')
+	let navbar: HTMLElement | null
+	let mobileMenuBtn: HTMLElement | null
+	let mobileMenu: HTMLElement | null
 
-	// Scroll effect for navbar
-	let lastScroll = 0
-	window.addEventListener('scroll', () => {
-		const currentScroll = window.scrollY
-
+	function handleNavbarScroll() {
 		if (navbar) {
-			if (currentScroll > 50) {
+			if (window.scrollY > 50) {
 				navbar.classList.add('bg-slate-950/90', 'backdrop-blur-xl', 'border-b', 'border-slate-800')
 			} else {
 				navbar.classList.remove(
@@ -110,19 +106,38 @@ const navLinks = [
 				)
 			}
 		}
+	}
 
-		lastScroll = currentScroll
-	})
-
-	// Mobile menu toggle
-	mobileMenuBtn?.addEventListener('click', () => {
+	function handleNavbarMobileMenuToggle() {
 		mobileMenu?.classList.toggle('hidden')
-	})
+	}
 
-	// Close mobile menu when clicking a link
-	mobileMenu?.querySelectorAll('a').forEach((link) => {
-		link.addEventListener('click', () => {
-			mobileMenu?.classList.add('hidden')
+	function handleNavbarMobileLinkClick() {
+		mobileMenu?.classList.add('hidden')
+	}
+
+	function initLandingNavbar() {
+		navbar = document.getElementById('landing-navbar')
+		mobileMenuBtn = document.getElementById('mobile-menu-btn')
+		mobileMenu = document.getElementById('mobile-menu')
+
+		window.addEventListener('scroll', handleNavbarScroll)
+		mobileMenuBtn?.addEventListener('click', handleNavbarMobileMenuToggle)
+		mobileMenu?.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('click', handleNavbarMobileLinkClick)
 		})
-	})
+	}
+
+	function cleanupLandingNavbar() {
+		window.removeEventListener('scroll', handleNavbarScroll)
+		mobileMenuBtn?.removeEventListener('click', handleNavbarMobileMenuToggle)
+		mobileMenu?.querySelectorAll('a').forEach((link) => {
+			link.removeEventListener('click', handleNavbarMobileLinkClick)
+		})
+	}
+
+	// Initialize on first load and page transitions
+	initLandingNavbar()
+	document.addEventListener('astro:page-load', initLandingNavbar)
+	document.addEventListener('astro:before-swap', cleanupLandingNavbar)
 </script>
