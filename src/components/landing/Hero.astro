@@ -184,8 +184,7 @@
 		}
 	}
 
-	// Initialize on first load and page transitions
-	initTerminalAnimation()
+	// Initialize on page load (astro:page-load fires on initial load too)
 	document.addEventListener('astro:page-load', initTerminalAnimation)
 	document.addEventListener('astro:before-swap', cleanupTerminalAnimation)
 </script>
