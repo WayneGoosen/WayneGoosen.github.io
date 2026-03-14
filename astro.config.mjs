@@ -26,7 +26,12 @@ export default defineConfig({
 			},
 			drafts: true
 		}),
-		sitemap(),
+		sitemap({
+			filter: (page) =>
+				!page.includes('/tags/') &&
+				!page.includes('/tags') &&
+				!page.includes('/category/')
+		}),
 		tailwind(),
 		partytown({
 			config: {
