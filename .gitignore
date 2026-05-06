@@ -41,3 +41,32 @@ wayne-goosen-brand-landing-page/
 
 # Backup/test content
 src/content/backup/
+
+# Blog generation state
+.blog-gen/
+
+# Claude Code — local agent context, never committed
+.claude/
+.claude.json
+CLAUDE.md
+
+# Local-only working directories — planning, research, generation, tooling.
+# None of these are referenced by the site or shipped in dist/.
+audits/
+docs/
+tasks/
+tools/
+seo/
+WayneGoosen/
+
+# One-off reference / planning files at repo root
+linkedin-profile-update.md
+github-banner.png
+waynegoosen-audit.png
+
+# Stray lockfile from another package manager (pnpm is the source of truth)
+package-lock.json
+
+# Mascot reference + image-generation candidate set — local-only inputs
+public/meerkat.png
+src/assets/images/_*

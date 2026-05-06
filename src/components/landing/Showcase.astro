@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets'
+import foundrymapPreview from '../../assets/images/foundrymap-preview.png'
+import azdoTfPlanViewerPreview from '../../assets/images/azdo-tf-plan-viewer-preview.png'
+
+// Showcase section — production tools I've built and run
+const projects = [
+	{
+		id: 'PRJ_01',
+		name: 'foundrymap.fyi',
+		tagline:
+			'Which Azure AI models are available in which regions, for which deployment type, at what price — answered fast.',
+		description:
+			'An interactive 3D globe of every Azure region hosting AI Foundry models. Type a model, see exactly which regions deploy it, with which SKU, at what cost. Direct Azure + partner models (Llama, Mistral, DeepSeek, Phi, Claude) in one view — with lifecycle badges and deployment types sourced live from the ARM API. Currently in BETA.',
+		url: 'https://foundrymap.fyi',
+		status: 'LIVE',
+		preview: foundrymapPreview,
+		previewAlt: 'foundrymap.fyi homepage — 3D globe of Azure regions hosting AI Foundry models',
+		stats: [
+			{ label: 'Regions tracked', value: '27' },
+			{ label: 'Data source', value: 'ARM API' },
+			{ label: 'Cost', value: 'Free' }
+		],
+		tags: ['Azure OpenAI', 'Partner Models', 'ARM API', 'Lifecycle Tracking', '3D Globe']
+	},
+	{
+		id: 'PRJ_02',
+		name: 'Terraform Plan Viewer',
+		tagline: 'Read your Terraform plans like code reviews, not CLI dumps.',
+		description:
+			'A native Plan Review tab for Azure DevOps build summaries. Renders the plan as a module-grouped tree with attribute-level diffs, replace-path reasons, and click-to-filter summary cards (Create / Update / Recreate / Delete). Works for binary tfplan or JSON output, supports OpenTofu, multi-stage pipelines, and themes itself to Azure DevOps light, dark, and high-contrast.',
+		url: 'https://marketplace.visualstudio.com/items?itemName=WayneGoosen.terraform-plan-viewer',
+		displayUrl: 'marketplace.visualstudio.com/items?itemName=WayneGoosen.terraform-plan-viewer',
+		status: 'LIVE',
+		preview: azdoTfPlanViewerPreview,
+		previewAlt:
+			'Terraform Plan Viewer — Azure DevOps build summary tab showing module-grouped resource changes',
+		stats: [
+			{ label: 'Plan format', value: 'Binary + JSON' },
+			{ label: 'Themes', value: 'Light / Dark / HC' },
+			{ label: 'License', value: 'MIT' }
+		],
+		tags: ['Terraform', 'OpenTofu', 'Azure DevOps', 'Plan Diff', 'Build Tab'],
+		caseStudy: {
+			label: 'Source on GitHub',
+			href: 'https://github.com/WayneGoosen/azdo-tf-plan-viewer',
+			external: true
+		}
+	}
+]
+---
+
+<section
+	id='showcase'
+	class='py-32 relative bg-slate-950 scroll-mt-24 overflow-hidden border-y border-slate-900'
+>
+	<!-- Background accent -->
+	<div
+		class='absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-emerald-600/[0.04] to-transparent pointer-events-none'
+	>
+	</div>
+
+	<div class='container mx-auto px-6 relative z-10'>
+		<!-- Section Header -->
+		<div class='max-w-3xl mb-20'>
+			<div class='text-orange-500 font-mono text-xs tracking-[0.3em] uppercase mb-4'>
+				Field Deployment
+			</div>
+			<h2
+				class='text-4xl md:text-6xl font-black mb-6 text-white tracking-tighter uppercase leading-[0.9]'
+			>
+				Built. Shipped. <br />
+				<span class='text-orange-600'>Live.</span>
+			</h2>
+			<p class='text-slate-400 text-lg font-light leading-relaxed'>
+				Production tools I run myself. The same instincts I bring to your platform — applied to
+				mine.
+			</p>
+		</div>
+
+		<div class='space-y-10'>
+			{
+				projects.map((project) => (
+					<article class='group relative'>
+						<div class='relative rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-orange-500/40 transition-all duration-500 overflow-hidden hover:shadow-[0_0_60px_rgba(249,115,22,0.08)]'>
+							{/* Browser-frame top bar */}
+							<div class='flex items-center justify-between px-6 py-3 border-b border-slate-800 bg-slate-950/80 gap-4'>
+								<div class='flex items-center gap-1.5 flex-shrink-0'>
+									<div class='w-2 h-2 rounded-full bg-slate-800' />
+									<div class='w-2 h-2 rounded-full bg-slate-800' />
+									<div class='w-2 h-2 rounded-full bg-slate-800' />
+								</div>
+								<div class='flex items-center gap-2 px-4 py-1 rounded-md bg-slate-900 border border-slate-800 min-w-0'>
+									<svg
+										xmlns='http://www.w3.org/2000/svg'
+										class='h-3 w-3 text-slate-600 flex-shrink-0'
+										fill='none'
+										viewBox='0 0 24 24'
+										stroke='currentColor'
+									>
+										<path
+											stroke-linecap='round'
+											stroke-linejoin='round'
+											stroke-width='2'
+											d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
+										/>
+									</svg>
+									<span class='font-mono text-xs text-slate-400 tracking-tight truncate'>
+										{project.displayUrl ?? project.url.replace(/^https?:\/\//, '')}
+									</span>
+								</div>
+								<div class='flex items-center gap-2 flex-shrink-0'>
+									<span class='text-emerald-500 text-[10px] shadow-[0_0_8px_rgba(16,185,129,0.5)]'>
+										●
+									</span>
+									<span class='font-mono text-[10px] text-emerald-400 uppercase tracking-[0.3em] font-bold'>
+										{project.status}
+									</span>
+								</div>
+							</div>
+
+							{/* Main grid: preview left, body right */}
+							<div class='grid grid-cols-1 lg:grid-cols-5'>
+								{/* Live screenshot */}
+								<div class='lg:col-span-3 relative bg-slate-950/50 lg:border-r border-slate-800/50 overflow-hidden'>
+									<a
+										href={project.url}
+										target='_blank'
+										rel='noopener noreferrer'
+										aria-label={`Open ${project.name} in a new tab`}
+										class='block group/img relative'
+									>
+										<Image
+											src={project.preview}
+											alt={project.previewAlt}
+											widths={[640, 960, 1280, 1440]}
+											sizes='(min-width: 1024px) 60vw, 100vw'
+											class='w-full h-auto object-cover object-top transition-transform duration-700 group-hover/img:scale-[1.02]'
+											loading='lazy'
+										/>
+										{/* Hover overlay */}
+										<div class='absolute inset-0 bg-gradient-to-tr from-orange-600/0 via-transparent to-orange-600/0 group-hover/img:from-orange-600/10 group-hover/img:to-orange-600/5 transition-all duration-500 pointer-events-none' />
+									</a>
+								</div>
+
+								{/* Body */}
+								<div class='lg:col-span-2 p-8 md:p-10 flex flex-col gap-8'>
+									<div>
+										<span class='font-mono text-[10px] text-slate-700 font-bold uppercase tracking-[0.3em] block mb-3'>
+											Project {project.id}
+										</span>
+										<h3 class='text-3xl md:text-4xl font-black text-white tracking-tighter mb-5 leading-[0.95]'>
+											{project.name}
+										</h3>
+										<p class='text-orange-400 text-base md:text-lg font-light leading-snug border-l-2 border-orange-500/40 pl-4'>
+											{project.tagline}
+										</p>
+									</div>
+
+									<p class='text-slate-300 text-sm md:text-base leading-relaxed font-light'>
+										{project.description}
+									</p>
+
+									{/* Stats strip */}
+									<div class='grid grid-cols-3 gap-2 py-5 border-y border-slate-800/50'>
+										{project.stats.map((stat) => (
+											<div>
+												<div class='font-mono text-[9px] text-slate-500 uppercase tracking-widest mb-1.5'>
+													{stat.label}
+												</div>
+												<div class='text-white text-base md:text-lg font-bold tracking-tight'>
+													{stat.value}
+												</div>
+											</div>
+										))}
+									</div>
+
+									{/* Tags */}
+									<div class='flex flex-wrap gap-2'>
+										{project.tags.map((tag) => (
+											<span class='px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 font-mono text-[10px] text-slate-400 uppercase tracking-tighter'>
+												{tag}
+											</span>
+										))}
+									</div>
+
+									{/* CTAs */}
+									<div class='flex flex-col sm:flex-row gap-3 mt-auto'>
+										<a
+											href={project.url}
+											target='_blank'
+											rel='noopener noreferrer'
+											class='group/cta inline-flex items-center justify-center gap-3 px-6 py-3.5 bg-white text-slate-950 rounded-xl font-bold text-sm uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 active:scale-95'
+										>
+											Visit
+											<svg
+												xmlns='http://www.w3.org/2000/svg'
+												class='h-4 w-4 transition-transform group-hover/cta:translate-x-1 group-hover/cta:-translate-y-1'
+												fill='none'
+												viewBox='0 0 24 24'
+												stroke='currentColor'
+											>
+												<path
+													stroke-linecap='round'
+													stroke-linejoin='round'
+													stroke-width='2.5'
+													d='M7 17L17 7M17 7H8M17 7v9'
+												/>
+											</svg>
+										</a>
+										{project.caseStudy && (
+											<a
+												href={project.caseStudy.href}
+												target={project.caseStudy.external ? '_blank' : undefined}
+												rel={project.caseStudy.external ? 'noopener noreferrer' : undefined}
+												class='inline-flex items-center justify-center gap-3 px-6 py-3.5 bg-slate-900 text-white rounded-xl font-bold text-sm uppercase tracking-[0.2em] border border-slate-800 hover:border-orange-500/40 transition-all hover:-translate-y-1'
+											>
+												{project.caseStudy.label}
+											</a>
+										)}
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
